@@ -14,7 +14,7 @@ POST:
     "password": "testtest"
 }
 ```
-> Returns boolean status
+> Returns boolean status<br>
 > If false, then there is no user with such a username and password
 
 
@@ -28,14 +28,14 @@ POST:
     "password": "testtest"
 }
 ```
-> Returns boolean status
+> Returns boolean status<br>
 > If false, then either a user with the same name already exists, or the length of the login or password does not meet the requirements
 
 
 ### Get user information:
 (without id and password) <br>
 `http://localhost:5000/api/user/*USER_ID*` <br>
-> \*USER_ID\* - ID of user :/
+> \*USER_ID\* - ID of user :/<br>
 > Returns login, about, avatarurl, lastlogin as JSON
 
 
@@ -49,7 +49,7 @@ PUT:
     "id": 1
 }
 ```
-> Returns boolean status
+> Returns boolean status<br>
 > If false, then Express or Database are down
 
 
@@ -62,7 +62,7 @@ PUT:
     "id": 1
 }
 ```
-> Returns boolean status
+> Returns boolean status<br>
 > If false, then Express or Database are down
 
 
@@ -74,5 +74,5 @@ DELETE:
     "id": 1
 }
 ```
-> Returns boolean status
+> Returns boolean status<br>
 > If false, it means that the user with the given id does not exist
