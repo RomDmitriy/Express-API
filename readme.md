@@ -1,4 +1,4 @@
-# API Documentation (v2.0-alpha)
+# API Documentation (v2.0.1-alpha)
 
 ##### Last tested on: v2.0-alpha
 
@@ -35,7 +35,6 @@ POST:
 ### Get all user information:
 (without id and password) <br>
 `http://localhost:5000/api/user/*USER_ID*` <br>
-> \*USER_ID\* - ID of user :/<br>
 > Returns login, about, avatarurl, lastlogin as JSON
 
 ### Get some user information:
@@ -94,7 +93,7 @@ POST:
     "canvas": "some big data"
 }
 ```
-> Returns bool status
+> Returns bool status <br>
 > If false then userID isn't found
 
 ## Items queries
@@ -108,5 +107,5 @@ POST:
     "image": "image_link"
 }
 ```
-> Returns bool status
+> Returns bool status <br>
 > If false then name already exists
