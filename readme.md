@@ -1,4 +1,4 @@
-# API Documentation (v2.2)
+# API Documentation (v2.2.1)
 
 Last tested on: v2.0-alpha
 
@@ -24,7 +24,7 @@ POST:
 `http://localhost:5000/api/user/register` <br>
 (minimum: login - 4 letters, password - 6 letters) <br>
 (maximum: login - 32 letters, password - 32 letters) <br>
-(login *must* be unique) <br>
+(login _must_ be unique) <br>
 ```
 POST:
 {

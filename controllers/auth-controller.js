@@ -66,7 +66,7 @@ export class UserController {
 
     async check(req, res) {
         if (req.body.login != null && req.body.pass != null) {
-            const user = await db.query(`SELECT id AS ID FROM Auth WHERE login = $1 AND password = $2;`, [req.body.login, req.body.pass]);
+            const user = await db.query(`SELECT id FROM Auth WHERE login = $1 AND password = $2;`, [req.body.login, req.body.pass]);
             if (user.rowCount) {
                 let data = new Date();
                 await db.query(`UPDATE Auth SET lastloginutc = $1 WHERE id = $2;`, [
@@ -95,9 +95,8 @@ export class UserController {
         res.json(true);
     }
 
-    //а нужна ли здесь проверка на наличие юзера в бд?
     async deleteUser(req, res) {
-        const delUser = await db.query(`SELECT id AS ID FROM Auth WHERE id = $1`, [req.body.id]);
+        const delUser = await db.query(`SELECT id FROM Auth WHERE id = $1`, [req.body.id]);
         if (delUser.rowCount) {
             console.log("Delete user with id = " + req.body.id);
             await db.query(`DELETE FROM Apartments WHERE owner_id = $1;`, [req.body.id]);
