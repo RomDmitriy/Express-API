@@ -1,4 +1,4 @@
-# API Documentation (v2.1-alpha)
+# API Documentation (v2.2)
 
 Last tested on: v2.0-alpha
 
@@ -15,8 +15,9 @@ POST:
     "pass": "testtest"
 }
 ```
-> Returns boolean status<br>
-> If false, then there is no user with such a username and password, or missing parameters.
+> Returns boolean status.<br>
+> If false, then there is no user with such a username and password, or missing parameters.<br>
+> Update lastLoginIn in database.
 
 
 ### Register new user:
@@ -31,21 +32,21 @@ POST:
     "pass": "testtest"
 }
 ```
-> Returns boolean status<br>
+> Returns boolean status.<br>
 > If false, then means one of the conditions above is not met.
 
 
 ### Get all user information:
 (without id and password) <br>
 `http://localhost:5000/api/user/*USER_ID*` <br>
-> Returns login, about, avatarurl, lastlogin as JSON
+> Returns login, about, avatarURL, lastLoginUTC, roomList[] as JSON.
 
 ### Get some user information:
 (id and password are not allowed) <br>
 `http://localhost:5000/api/user/<USER_ID>/<FIELDS>` <br>
-> FIELDS - enumeration of needed fields (Avaliable fields: login, about, avatarurl, lastloginutc, roomlist)
+> FIELDS - enumeration of needed fields (Avaliable fields: login, about, avatarurl, lastloginutc, roomlist).
 >> Example of crazy API Request:<br>`http://localhost:5000/api/user/1/login, id, avatarurlabout ! lastloginutc->roomlist`<br>
->> This example returns login, about, avatarurl, lastloginutc, roomlist
+>> This example returns login, about, avatarURL, lastLoginUTC, roomList[] as JSON.
 
 ### Update password:
 `http://localhost:5000/api/user/changePass` <br>
@@ -57,7 +58,7 @@ PUT:
     "id": *USER_ID*
 }
 ```
-> Returns true<br>
+> Returns true.<br>
 
 
 ### Update avatar:
@@ -69,7 +70,7 @@ PUT:
     "id": *USER_ID*
 }
 ```
-> Returns true<br>
+> Returns true.<br>
 
 
 ### Delete user:
@@ -80,8 +81,8 @@ DELETE:
     "id": *USER_ID*
 }
 ```
-> Returns boolean status<br>
-> If false, it means that the user with the given id does not exist
+> Returns boolean status.<br>
+> If false, it means that the user with the given id does not exist.
 
 ## Apartments queries
 
@@ -95,8 +96,8 @@ POST:
     "canvas": "some big data"
 }
 ```
-> Returns bool status <br>
-> If false then userID isn't found
+> Returns bool status.<br>
+> If false then userID isn't found.
 
 ## Items queries
 
@@ -109,5 +110,5 @@ POST:
     "image": "image_link"
 }
 ```
-> Returns bool status <br>
-> If false then name already exists
+> Returns bool status.<br>
+> If false then name already exists.
