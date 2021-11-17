@@ -1,12 +1,13 @@
-# API Documentation (v2.0.1-alpha)
+# API Documentation (v2.0.2-alpha)
 
-##### Last tested on: v2.0-alpha
+###### Last tested on: v2.0-alpha
 
 ## Auth queries
 
 ### Check user in database:
 `http://localhost:5000/api/user/check` <br>
 (minimum: login - 4 letters, password - 6 letters) <br>
+(maximum: login - 32 letters, password - 32 letters) <br>
 ```
 POST:
 {
@@ -20,7 +21,9 @@ POST:
 
 ### Register new user:
 `http://localhost:5000/api/user/register` <br>
-(minimum: login - 4 letters, password - 6 letters, login & password must be less then 32 letters, login *must* be unique) <br>
+(minimum: login - 4 letters, password - 6 letters) <br>
+(maximum: login - 32 letters, password - 32 letters) <br>
+(login *must* be unique) <br>
 ```
 POST:
 {
@@ -82,7 +85,7 @@ DELETE:
 
 ## Apartments queries
 
-## Add apartment
+### Add apartment
 `http://localhost:5000/api/aparts/add` <br>
 ```
 POST:
@@ -97,7 +100,7 @@ POST:
 
 ## Items queries
 
-## Add item
+### Add item
 `http://localhost:5000/api/items/add` <br>
 ```
 POST:
