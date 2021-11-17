@@ -7,14 +7,14 @@ const userController = new UserController();
 //register
 authRouter.post('/register', userController.createUser);
 
-//fetch all info
-authRouter.get('/:id', userController.getUser);
-
-//fetch
-authRouter.get('/:id/:query', userController.getUserQuery);
-
 //isFound
 authRouter.post('/check', userController.check);
+
+//fetch all info
+authRouter.get('/fetch/:id', userController.getUser);
+
+//fetch
+authRouter.get('/fetch/:id/:query', userController.getUserQuery);
 
 //update password
 authRouter.put('/changePass', userController.updatePassword);

@@ -1,4 +1,4 @@
-# API Documentation (v2.2.1)
+# API Documentation (v2.3)
 
 Last tested on: v2.0-alpha
 
@@ -38,12 +38,12 @@ POST:
 
 ### Get all user information:
 (without id and password) <br>
-`http://localhost:5000/api/user/*USER_ID*` <br>
+`http://localhost:5000/api/user/fetch/<USER_ID>` <br>
 > Returns login, about, avatarURL, lastLoginUTC, roomList[] as JSON.
 
 ### Get some user information:
 (id and password are not allowed) <br>
-`http://localhost:5000/api/user/<USER_ID>/<FIELDS>` <br>
+`http://localhost:5000/api/user/fetch/<USER_ID>/<FIELDS>` <br>
 > FIELDS - enumeration of needed fields (Avaliable fields: login, about, avatarurl, lastloginutc, roomlist).
 >> Example of crazy API Request:<br>`http://localhost:5000/api/user/1/login, id, avatarurlabout ! lastloginutc->roomlist`<br>
 >> This example returns login, about, avatarURL, lastLoginUTC, roomList[] as JSON.

@@ -6,6 +6,10 @@ import itemsRouter from "./routes/items-routes.js";
 const app = express();
 
 app.use(express.json());
+app.use((req, res, next) => {
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5000');
+});
 app.use('/api/user', authRouter);
 app.use('/api/apart', apartmentRouter);
 app.use('/api/item', itemsRouter);

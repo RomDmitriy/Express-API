@@ -67,22 +67,22 @@ export class UserController {
     async check(req, res) {
         if (req.body.login != null && req.body.pass != null) {
             const user = await db.query(`SELECT id FROM Auth WHERE login = $1 AND password = $2;`, [req.body.login, req.body.pass]);
-            if (user.rowCount) {
-                let data = new Date();
-                await db.query(`UPDATE Auth SET lastloginutc = $1 WHERE id = $2;`, [
-                    data.getUTCFullYear() + '-' + (data.getUTCMonth() + 1) + '-' +
-                    data.getUTCDate() + ' ' + data.getUTCHours() +
-                    ':' + data.getUTCMinutes() + ':' + data.getUTCSeconds(),
-                user.rows[0].id]);
-                res.json(true);
+                if (user.rowCount) {
+                    let data = new Date();
+                    await db.query(`UPDATE Auth SET lastloginutc = $1 WHERE id = $2;`, [
+                       data.getUTCFullYear() + '-' + (data.getUTCMonth() + 1) + '-' +
+                       data.getUTCDate() + ' ' + data.getUTCHours() +
+                       ':' + data.getUTCMinutes() + ':' + data.getUTCSeconds(),
+                        user.rows[0].id]);
+                    res.json(true);
+                }
+                else {
+                    res.json(false);
+                }
             }
             else {
                 res.json(false);
             }
-        }
-        else {
-            res.json(false);
-        }
     }
 
     async updatePassword(req, res) {
