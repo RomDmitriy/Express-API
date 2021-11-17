@@ -29,7 +29,7 @@ export class UserController {
             res.json(user.rows[0]);
         }
         else {
-            return(false);
+            res.json(false);
         }
     }
 
