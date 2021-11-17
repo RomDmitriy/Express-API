@@ -1,6 +1,6 @@
-# API Documentation (v2.0.2-alpha)
+# API Documentation (v2.0.3-alpha)
 
-###### Last tested on: v2.0-alpha
+Last tested on: v2.0-alpha
 
 ## Auth queries
 
