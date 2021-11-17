@@ -1,3 +1,4 @@
+import e from "express";
 import db from "../db.js";
 
 export class UserController {
@@ -5,11 +6,11 @@ export class UserController {
     async createUser(req, res) {
         //validator
         if (req.body.login.length > 3 && req.body.login.length < 33
-            && req.body.password.length > 5 && req.body.password.length < 33) {
+            && req.body.pass.length > 5 && req.body.pass.length < 33) {
 
             const user = await db.query(`SELECT id FROM Auth WHERE login = $1;`, [req.body.login]);
             if (!user.rowCount) {
-                await db.query(`INSERT INTO Auth (login, password) VALUES ($1, $2);`, [req.body.login, req.body.password]);
+                await db.query(`INSERT INTO Auth (login, password) VALUES ($1, $2);`, [req.body.login, req.body.pass]);
                 res.json(true);
             }
             else {
@@ -23,8 +24,13 @@ export class UserController {
     }
 
     async getUser(req, res) {
-        const user = await db.query(`SELECT login, about, avatarurl, lastloginutc, roomlist FROM Auth WHERE id = $1;`, [req.params.id]);
-        res.json(user.rows[0]);
+        if (req.params.id != null) {
+            const user = await db.query(`SELECT login, about, avatarurl, lastloginutc, roomlist FROM Auth WHERE id = $1;`, [req.params.id]);
+            res.json(user.rows[0]);
+        }
+        else {
+            return(false);
+        }
     }
 
     async getUserQuery(req, res) {
@@ -59,15 +65,20 @@ export class UserController {
     }
 
     async check(req, res) {
-        const user = await db.query(`SELECT id FROM Auth WHERE login = $1 AND password = $2;`, [req.body.login, req.body.password]);
-        if (user.rowCount) {
-            let data = new Date();
-            await db.query(`UPDATE Auth SET lastloginutc = $1 WHERE id = $2;`, [
-                data.getUTCFullYear() + '-' + (data.getUTCMonth() + 1) + '-' +
-                data.getUTCDate() + ' ' + data.getUTCHours() +
-                ':' + data.getUTCMinutes() + ':' + data.getUTCSeconds(),
-            user.rows[0].id]);
-            res.json(true);
+        if (req.body.login != null && req.body.pass != null) {
+            const user = await db.query(`SELECT id FROM Auth WHERE login = $1 AND password = $2;`, [req.body.login, req.body.pass]);
+            if (user.rowCount) {
+                let data = new Date();
+                await db.query(`UPDATE Auth SET lastloginutc = $1 WHERE id = $2;`, [
+                    data.getUTCFullYear() + '-' + (data.getUTCMonth() + 1) + '-' +
+                    data.getUTCDate() + ' ' + data.getUTCHours() +
+                    ':' + data.getUTCMinutes() + ':' + data.getUTCSeconds(),
+                user.rows[0].id]);
+                res.json(true);
+            }
+            else {
+                res.json(false);
+            }
         }
         else {
             res.json(false);
@@ -86,9 +97,10 @@ export class UserController {
 
     //а нужна ли здесь проверка на наличие юзера в бд?
     async deleteUser(req, res) {
-        const delUser = await db.query(`SELECT id FROM auth WHERE id = $1`, [req.body.id]);
+        const delUser = await db.query(`SELECT id FROM Auth WHERE id = $1`, [req.body.id]);
         if (delUser.rowCount) {
             console.log("Delete user with id = " + req.body.id);
+            await db.query(`DELETE FROM Apartments WHERE owner_id = $1;`, [req.body.id]);
             await db.query(`DELETE FROM Auth WHERE id = $1;`, [req.body.id]);
             res.json(true);
         }

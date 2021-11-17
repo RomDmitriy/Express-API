@@ -1,9 +1,13 @@
 import express from "express";
-import authRouter from "./api/routes/auth-routes.js";
+import apartmentRouter from "./routes/apartment-routes.js";
+import authRouter from "./routes/auth-routes.js";
+import itemsRouter from "./routes/items-routes.js";
 
 const app = express();
 
 app.use(express.json());
-app.use('/api', authRouter);
+app.use('/api/user', authRouter);
+app.use('/api/aparts', apartmentRouter);
+app.use('/api/items', itemsRouter);
 
 export default app
