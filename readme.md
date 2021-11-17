@@ -1,6 +1,6 @@
-# API Documentation (v1.1)
+# API Documentation (v1.1.1)
 
-##### Last tested on: v1.0
+##### Last tested on: v1.1.1
 
 ## Auth queries
 
@@ -43,7 +43,7 @@ POST:
 `http://localhost:5000/api/user/<USER_ID>/<FIELDS>` <br>
 > USER_ID - ID of a user :/<br>
 > FIELDS - enumeration of needed fields (Avaliable fields: login, about, avatarurl, lastloginutc, roomlist)
->> Example of crazy API Request: `http://localhost:5000/api/user/1/login, id, avatarurlabout ! lastloginutc->roomlist`
+>> Example of crazy API Request:<br>`http://localhost:5000/api/user/1/login, id, avatarurlabout ! lastloginutc->roomlist`<br>
 >> This example returns login, about, avatarurl, lastloginutc, roomlist
 
 ### Get single user information:

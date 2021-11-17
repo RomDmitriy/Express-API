@@ -79,7 +79,7 @@ export class UserController {
     //а нужна ли здесь проверка на наличие юзера в бд?
     async deleteUser(req, res) {
         const delUser = await db.query(`SELECT id FROM auth WHERE id = $1`, [req.body.id]);
-        if (!delUser.rowCount) {
+        if (delUser.rowCount) {
             console.log("Delete user with id = " + req.body.id);
             await db.query(`DELETE FROM Auth WHERE id = $1;`, [req.body.id]);
             res.json(true);
