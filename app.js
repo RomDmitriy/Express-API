@@ -7,7 +7,7 @@ const app = express();
 
 app.use(express.json());
 app.use('/api/user', authRouter);
-app.use('/api/aparts', apartmentRouter);
-app.use('/api/items', itemsRouter);
+app.use('/api/apart', apartmentRouter);
+app.use('/api/item', itemsRouter);
 
 export default app

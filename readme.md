@@ -1,4 +1,4 @@
-# API Documentation (v2.0.3-alpha)
+# API Documentation (v2.1-alpha)
 
 Last tested on: v2.0-alpha
 
@@ -86,7 +86,7 @@ DELETE:
 ## Apartments queries
 
 ### Add apartment
-`http://localhost:5000/api/aparts/add` <br>
+`http://localhost:5000/api/apart/add` <br>
 ```
 POST:
 {
@@ -101,7 +101,7 @@ POST:
 ## Items queries
 
 ### Add item
-`http://localhost:5000/api/items/add` <br>
+`http://localhost:5000/api/item/add` <br>
 ```
 POST:
 {
