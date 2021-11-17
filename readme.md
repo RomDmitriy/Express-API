@@ -1,4 +1,4 @@
-# API Documentation (v1.0)
+# API Documentation (v1.1)
 
 ##### Last tested on: v1.0
 
@@ -32,12 +32,25 @@ POST:
 > If false, then either a user with the same name already exists, or the length of the login or password does not meet the requirements
 
 
-### Get user information:
+### Get all user information:
 (without id and password) <br>
 `http://localhost:5000/api/user/*USER_ID*` <br>
 > \*USER_ID\* - ID of user :/<br>
 > Returns login, about, avatarurl, lastlogin as JSON
 
+### Get some user information:
+(id and password are not allowed) <br>
+`http://localhost:5000/api/user/<USER_ID>/<FIELDS>` <br>
+> USER_ID - ID of a user :/<br>
+> FIELDS - enumeration of needed fields (Avaliable fields: login, about, avatarurl, lastloginutc, roomlist)
+>> Example of crazy API Request: `http://localhost:5000/api/user/1/login, id, avatarurlabout ! lastloginutc->roomlist`
+>> This example returns login, about, avatarurl, lastloginutc, roomlist
+
+### Get single user information:
+(without id and password) <br>
+`http://localhost:5000/api/user/*USER_ID*` <br>
+> \*USER_ID\* - ID of user :/<br>
+> Returns login, about, avatarurl, lastlogin as JSON
 
 ### Update password:
 `http://localhost:5000/api/user/changePass` <br>
