@@ -1,6 +1,6 @@
-# API Documentation (v1.1.1)
+# API Documentation (v1.2)
 
-##### Last tested on: v1.1.1
+##### Last tested on: v1.2
 
 ## Auth queries
 

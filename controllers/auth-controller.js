@@ -1,13 +1,21 @@
-import e from "express";
 import db from "../db.js";
 
 export class UserController {
 
     async createUser(req, res) {
-        const user = await db.query(`SELECT id FROM Auth WHERE login = $1;`, [req.body.login]);
-        if (!user.rowCount) {
-            await db.query(`INSERT INTO Auth (login, password) VALUES ($1, $2);`, [req.body.login, req.body.password]);
-            res.json(true);
+        //validator
+        if (req.body.login.length > 3 && req.body.login.length < 33
+            && req.body.password.length > 5 && req.body.password.length < 33) {
+
+            const user = await db.query(`SELECT id FROM Auth WHERE login = $1;`, [req.body.login]);
+            if (!user.rowCount) {
+                await db.query(`INSERT INTO Auth (login, password) VALUES ($1, $2);`, [req.body.login, req.body.password]);
+                res.json(true);
+            }
+            else {
+                res.json(false);
+            }
+
         }
         else {
             res.json(false);
