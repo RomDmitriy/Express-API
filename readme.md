@@ -40,7 +40,6 @@ POST:
 ### Get some user information:
 (id and password are not allowed) <br>
 `http://localhost:5000/api/user/<USER_ID>/<FIELDS>` <br>
-> USER_ID - ID of a user :/<br>
 > FIELDS - enumeration of needed fields (Avaliable fields: login, about, avatarurl, lastloginutc, roomlist)
 >> Example of crazy API Request:<br>`http://localhost:5000/api/user/1/login, id, avatarurlabout ! lastloginutc->roomlist`<br>
 >> This example returns login, about, avatarurl, lastloginutc, roomlist
