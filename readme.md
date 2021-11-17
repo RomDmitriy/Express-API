@@ -1,4 +1,4 @@
-# API Documentation (v1.2)
+# API Documentation (v1.2.1)
 
 ##### Last tested on: v1.2
 
@@ -62,8 +62,7 @@ PUT:
     "id": 1
 }
 ```
-> Returns boolean status<br>
-> If false, then Express or Database are down
+> Returns true<br>
 
 
 ### Update avatar:
@@ -75,8 +74,7 @@ PUT:
     "id": 1
 }
 ```
-> Returns boolean status<br>
-> If false, then Express or Database are down
+> Returns true<br>
 
 
 ### Delete user:
