@@ -18,7 +18,7 @@ export class UserController {
             );
             if (!user.rowCount) {
                 await db.query(
-                    `INSERT INTO Auth (login, password) VALUES ('${req.body.login}', '${req.body.pass}');`
+                    `INSERT INTO Auth (login, nickname, password) VALUES ('${req.body.login}', '${req.body.login}', '${req.body.pass}');`
                 );
                 console.log("Success!");
                 res.json(true);
@@ -38,7 +38,7 @@ export class UserController {
         //проверка на передачу параметра
         if (req.params.id != null && parseInt(req.params.id) == req.params.id) {
             const user = await db.query(
-                `SELECT login, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc FROM Auth WHERE id = ${req.params.id};`
+                `SELECT login, nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc FROM Auth WHERE id = ${req.params.id};`
             );
             //проверка на нахождение пользователя в БД
             if (user.rowCount) {
@@ -63,6 +63,9 @@ export class UserController {
         //парсер запрашиваемых полей
         if (req.params.query.includes("login")) {
             query.push("login");
+        }
+        if (req.params.query.includes("nickname")) {
+            query.push("nickname");
         }
         if (req.params.query.includes("about")) {
             query.push("about");
@@ -162,6 +165,26 @@ export class UserController {
         if (checkUser.rowCount) {
             await db.query(
                 `UPDATE Auth SET avatar_url = '${req.body.avatarURL}' WHERE id = ${req.params.id};`
+            );
+            console.log("Success!");
+            res.json(true);
+        } else {
+            console.log("Failure!");
+            res.json(false);
+        }
+    }
+
+    async updateNickname(req, res) {
+        console.log();
+        console.log(
+            "[Update nickname] User with id = " + req.params.id + "..."
+        );
+        const checkUser = await db.query(
+            `SELECT id FROM Auth WHERE id = ${req.params.id}`
+        );
+        if (checkUser.rowCount) {
+            await db.query(
+                `UPDATE Auth SET nickname = '${req.body.nick}' WHERE id = ${req.params.id};`
             );
             console.log("Success!");
             res.json(true);

@@ -1,6 +1,6 @@
-# API Documentation (v3.0.1-alpha)
+# API Documentation
 
-Last tested on: v3.0.1-alpha
+Last tested on: v3.1-alpha
 
 ## Auth queries
 
@@ -38,7 +38,7 @@ POST:
 ```
 GET
 ```
-> Returns login, about, avatarURL, lastLoginUTC as JSON or false.
+> Returns login, username, about, avatarURL, lastLoginUTC as JSON or false.
 > If false, then user not found or missing <USER_ID>
 
 ### Get some user information:
@@ -46,8 +46,8 @@ GET
 `http://localhost:5000/api/user/fetch/<USER_ID>/<FIELDS>` <br>
 > Returns requested fields as JSON or false.
 > If false, then user not found or missing <USER_ID>
-> FIELDS - enumeration of needed fields (Avaliable fields: login, about, avatar_url, last_login_utc).
->> Example of crazy API Request:<br>`http://localhost:5000/api/user/fetch/1/login, id, avatar_urlabout ! last_login_utc->`<br>
+> FIELDS - enumeration of needed fields (Avaliable fields: login, username, about, avatar_url, last_login_utc).
+>> Example of crazy API Request:<br>`http://localhost:5000/api/user/fetch/<USER_ID>/login, nickname, id, avatar_urlabout ! last_login_utc->`<br>
 >> This example returns login, about, avatarURL, lastLoginUTC as JSON.
 
 ### Update password:
@@ -69,6 +69,17 @@ PUT:
 PUT:
 {
     "avatarURL": "avatarURL_Link"
+}
+```
+> Returns boolean status.<br>
+> If false, then user not found.
+
+### Update nickname:
+`http://localhost:5000/api/user/changeNickname/<USER_ID>` <br>
+```
+PUT:
+{
+    "nick": "MACTEP-qpJIoMaCTeP"
 }
 ```
 > Returns boolean status.<br>

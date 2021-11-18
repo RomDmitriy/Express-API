@@ -22,6 +22,9 @@ authRouter.put("/changePass/:id", userController.updatePassword);
 //update avatar
 authRouter.put("/changeAvatar/:id", userController.updateAvatar);
 
+//update nickname
+authRouter.put("/changeNickname/:id", userController.updateNickname);
+
 //delete user
 authRouter.delete("/delete/:id", userController.deleteUser);
 
