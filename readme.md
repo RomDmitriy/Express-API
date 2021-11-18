@@ -1,6 +1,6 @@
-# API Documentation (v3.0-alpha)
+# API Documentation (v3.0.1-alpha)
 
-Last tested on: UNKNOWN
+Last tested on: v3.0.1-alpha
 
 ## Auth queries
 
