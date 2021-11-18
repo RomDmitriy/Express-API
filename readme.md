@@ -1,4 +1,4 @@
-# API Documentation
+# API Documentation (v3.2)
 
 Last tested on: v3.1-alpha
 
@@ -13,7 +13,7 @@ Last tested on: v3.1-alpha
 POST:
 {
     "login": "test",
-    "pass": "testtest"
+    "password": "testtest"
 }
 ```
 > Returns boolean status.<br>
@@ -25,7 +25,7 @@ POST:
 POST:
 {
     "login": "test",
-    "pass": "testtest"
+    "password": "testtest"
 }
 ```
 > Returns id or false.<br>
@@ -56,7 +56,7 @@ GET
 ```
 PUT:
 {
-    "pass": "New Password"
+    "password": "New Password"
 }
 ```
 > Returns boolean status.<br>

@@ -10,15 +10,15 @@ export class UserController {
         if (
             req.body.login.length > 3 &&
             req.body.login.length < 33 &&
-            req.body.pass.length > 5 &&
-            req.body.pass.length < 33
+            req.body.password.length > 5 &&
+            req.body.password.length < 33
         ) {
             const user = await db.query(
                 `SELECT id FROM Auth WHERE login = '${req.body.login}';`
             );
             if (!user.rowCount) {
                 await db.query(
-                    `INSERT INTO Auth (login, nickname, password) VALUES ('${req.body.login}', '${req.body.login}', '${req.body.pass}');`
+                    `INSERT INTO Auth (login, nickname, password) VALUES ('${req.body.login}', '${req.body.login}', '${req.body.password}');`
                 );
                 console.log("Success!");
                 res.json(true);
@@ -101,9 +101,9 @@ export class UserController {
     async check(req, res) {
         console.log();
         console.log("[Check] User with name = " + req.body.login + "...");
-        if (req.body.login != null && req.body.pass != null) {
+        if (req.body.login != null && req.body.password != null) {
             const user = await db.query(
-                `SELECT id FROM Auth WHERE login = '${req.body.login}' AND password = '${req.body.pass}';`
+                `SELECT id FROM Auth WHERE login = '${req.body.login}' AND password = '${req.body.password}';`
             );
             if (user.rowCount) {
                 let data = new Date();
@@ -144,9 +144,9 @@ export class UserController {
         const checkUser = await db.query(
             `SELECT id FROM Auth WHERE id = ${req.params.id};`
         );
-        if (checkUser.rowCount && req.body.pass != null) {
+        if (checkUser.rowCount && req.body.password != null) {
             await db.query(
-                `UPDATE Auth SET password = '${req.body.pass}' WHERE id = ${req.params.id};`
+                `UPDATE Auth SET password = '${req.body.password}' WHERE id = ${req.params.id};`
             );
             console.log("Success!");
             res.json(true);
