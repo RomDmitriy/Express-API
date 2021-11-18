@@ -1,7 +1,7 @@
 import express from "express";
 import apartmentRouter from "./routes/apartment-routes.js";
 import authRouter from "./routes/auth-routes.js";
-import itemsRouter from "./routes/items-routes.js";
+import itemsRouter from "./routes/item-routes.js";
 import cors from 'cors';
 
 const app = express();

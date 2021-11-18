@@ -24,9 +24,16 @@ export class UserController {
     }
 
     async getUser(req, res) {
+        //проверка на передачу параметра
         if (req.params.id != null) {
             const user = await db.query(`SELECT login, about, avatarurl, to_char(lastloginutc, 'DD.MM.YYYY HH24:MI:SS') as lastLoginUTC, roomlist FROM Auth WHERE id = $1;`, [req.params.id]);
-            res.json(user.rows[0]);
+            //проверка на нахождение пользователя в БД
+            if (user.rowCount) {
+                res.json(user.rows[0]);
+            }
+            else {
+                res.json(false);
+            }
         }
         else {
             res.json(false);
@@ -36,6 +43,7 @@ export class UserController {
     async getUserQuery(req, res) {
         let query = new Array();
 
+        //парсер запрашиваемых полей
         if (req.params.query.includes("login")) {
             query.push("login");
         }
@@ -86,21 +94,34 @@ export class UserController {
     }
 
     async updatePassword(req, res) {
-        await db.query(`UPDATE Auth SET password = $1 WHERE id = $2;`, [req.body.password, req.body.id]);
-        res.json(true);
+        const checkUser = await db.query(`SELECT id FROM Auth WHERE id = $1`, [req.params.id]);
+        if (checkUser.rowCount) {
+            await db.query(`UPDATE Auth SET password = $1 WHERE id = $2;`, [req.body.password, req.params.id]);
+            res.json(true);
+        }
+        else {
+            res.json(false);
+        }
     }
 
     async updateAvatar(req, res) {
-        await db.query(`UPDATE Auth SET avatarurl = $1 WHERE id = $2;`, [req.body.avatarURL, req.body.id]);
-        res.json(true);
+        const checkUser = await db.query(`SELECT id FROM Auth WHERE id = $1`, [req.params.id]);
+        if (checkUser.rowCount) {
+            console.log("[LOG]Update user avatar with id = " + req.params.id);
+            await db.query(`UPDATE Auth SET avatarurl = $1 WHERE id = $2;`, [req.body.avatarURL, req.params.id]);
+            res.json(true);
+        }
+        else {
+            res.json(false);
+        }
     }
 
     async deleteUser(req, res) {
-        const delUser = await db.query(`SELECT id FROM Auth WHERE id = $1`, [req.body.id]);
+        const delUser = await db.query(`SELECT id FROM Auth WHERE id = $1`, [req.params.id]);
         if (delUser.rowCount) {
-            console.log("Delete user with id = " + req.body.id);
-            await db.query(`DELETE FROM Apartments WHERE owner_id = $1;`, [req.body.id]);
-            await db.query(`DELETE FROM Auth WHERE id = $1;`, [req.body.id]);
+            console.log("[LOG]Delete user with id = " + req.params.id);
+            await db.query(`DELETE FROM Apartments WHERE owner_id = $1;`, [req.params.id]);
+            await db.query(`DELETE FROM Auth WHERE id = $1;`, [req.params.id]);
             res.json(true);
         }
         else {

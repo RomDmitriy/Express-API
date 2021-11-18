@@ -1,24 +1,8 @@
-# API Documentation (v2.3.4)
+# API Documentation (v2.4)
 
-Last tested on: v2.0-alpha
+Last tested on: v2.4
 
 ## Auth queries
-
-### Check user in database:
-`http://localhost:5000/api/user/check` <br>
-(minimum: login - 4 letters, password - 6 letters) <br>
-(maximum: login - 32 letters, password - 32 letters) <br>
-```
-POST:
-{
-    "login": "test",
-    "pass": "testtest"
-}
-```
-> Returns boolean status.<br>
-> If false, then there is no user with such a username and password, or missing parameters.<br>
-> Update lastLoginIn in database.
-
 
 ### Register new user:
 `http://localhost:5000/api/user/register` <br>
@@ -35,17 +19,34 @@ POST:
 > Returns boolean status.<br>
 > If false, then means one of the conditions above is not met.
 
+### Check user in database:
+`http://localhost:5000/api/user/check` <br>
+(minimum: login - 4 letters, password - 6 letters) <br>
+(maximum: login - 32 letters, password - 32 letters) <br>
+```
+POST:
+{
+    "login": "test",
+    "pass": "testtest"
+}
+```
+> Returns boolean status.<br>
+> If false, then there is no user with such a username and password, or missing parameters.<br>
+> Update lastLoginIn in database.
 
 ### Get all user information:
 (without id and password) <br>
 `http://localhost:5000/api/user/fetch/<USER_ID>` <br>
-> Returns login, about, avatarURL, lastLoginUTC, roomList[] as JSON.
+> Returns login, about, avatarURL, lastLoginUTC, roomList[] as JSON or false.
+> If false, then user not found or missing <USER_ID>
 
 ### Get some user information:
 (id and password are not allowed) <br>
 `http://localhost:5000/api/user/fetch/<USER_ID>/<FIELDS>` <br>
+> Returns requested fields as JSON or false.
+> If false, then user not found or missing <USER_ID>
 > FIELDS - enumeration of needed fields (Avaliable fields: login, about, avatarurl, lastloginutc, roomlist).
->> Example of crazy API Request:<br>`http://localhost:5000/api/user/1/login, id, avatarurlabout ! lastloginutc->roomlist`<br>
+>> Example of crazy API Request:<br>`http://localhost:5000/api/user/fetch/1/login, id, avatarurlabout ! lastloginutc->roomlist`<br>
 >> This example returns login, about, avatarURL, lastLoginUTC, roomList[] as JSON.
 
 ### Update password:
@@ -58,7 +59,8 @@ PUT:
     "id": *USER_ID*
 }
 ```
-> Returns true.<br>
+> Returns boolean status.<br>
+> If false, then user not found.
 
 
 ### Update avatar:
@@ -70,7 +72,8 @@ PUT:
     "id": *USER_ID*
 }
 ```
-> Returns true.<br>
+> Returns boolean status.<br>
+> If false, then user not found.
 
 
 ### Delete user:

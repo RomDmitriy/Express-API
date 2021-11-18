@@ -13,16 +13,16 @@ authRouter.post('/check', userController.check);
 //fetch all info
 authRouter.get('/fetch/:id', userController.getUser);
 
-//fetch
+//fetch some info
 authRouter.get('/fetch/:id/:query', userController.getUserQuery);
 
 //update password
-authRouter.put('/changePass', userController.updatePassword);
+authRouter.put('/changePass/:id', userController.updatePassword);
 
 //update avatar
-authRouter.put('/changeAvatar', userController.updateAvatar);
+authRouter.put('/changeAvatar/:id', userController.updateAvatar);
 
-//delete
-authRouter.delete('/delete', userController.deleteUser);
+//delete user
+authRouter.delete('/delete/:id', userController.deleteUser);
 
 export default authRouter
