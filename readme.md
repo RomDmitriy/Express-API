@@ -28,7 +28,7 @@ POST:
     "pass": "testtest"
 }
 ```
-> Returns boolean status.<br>
+> Returns id or false.<br>
 > If false, then there is no user with such a username and password, or missing parameters.<br>
 > Update lastLoginIn in database.
 
