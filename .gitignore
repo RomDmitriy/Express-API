@@ -46,3 +46,6 @@ Thumbs.db
 
 #login file
 db.js
+
+#editor config
+.editorconfig

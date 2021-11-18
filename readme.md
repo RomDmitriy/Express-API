@@ -1,6 +1,6 @@
-# API Documentation (v2.4)
+# API Documentation (v3.0-alpha)
 
-Last tested on: v2.4
+Last tested on: UNKNOWN
 
 ## Auth queries
 
@@ -21,8 +21,6 @@ POST:
 
 ### Check user in database:
 `http://localhost:5000/api/user/check` <br>
-(minimum: login - 4 letters, password - 6 letters) <br>
-(maximum: login - 32 letters, password - 32 letters) <br>
 ```
 POST:
 {
@@ -34,10 +32,13 @@ POST:
 > If false, then there is no user with such a username and password, or missing parameters.<br>
 > Update lastLoginIn in database.
 
-### Get all user information:
+### Get all information about user:
 (without id and password) <br>
 `http://localhost:5000/api/user/fetch/<USER_ID>` <br>
-> Returns login, about, avatarURL, lastLoginUTC, roomList[] as JSON or false.
+```
+GET
+```
+> Returns login, about, avatarURL, lastLoginUTC as JSON or false.
 > If false, then user not found or missing <USER_ID>
 
 ### Get some user information:
@@ -45,18 +46,17 @@ POST:
 `http://localhost:5000/api/user/fetch/<USER_ID>/<FIELDS>` <br>
 > Returns requested fields as JSON or false.
 > If false, then user not found or missing <USER_ID>
-> FIELDS - enumeration of needed fields (Avaliable fields: login, about, avatarurl, lastloginutc, roomlist).
->> Example of crazy API Request:<br>`http://localhost:5000/api/user/fetch/1/login, id, avatarurlabout ! lastloginutc->roomlist`<br>
->> This example returns login, about, avatarURL, lastLoginUTC, roomList[] as JSON.
+> FIELDS - enumeration of needed fields (Avaliable fields: login, about, avatar_url, last_login_utc).
+>> Example of crazy API Request:<br>`http://localhost:5000/api/user/fetch/1/login, id, avatar_urlabout ! last_login_utc->`<br>
+>> This example returns login, about, avatarURL, lastLoginUTC as JSON.
 
 ### Update password:
-`http://localhost:5000/api/user/changePass` <br>
+`http://localhost:5000/api/user/changePass/<USER_ID>` <br>
 (minimum: password - 6 letters) <br>
 ```
 PUT:
 {
-    "password": "New Password",
-    "id": *USER_ID*
+    "pass": "New Password"
 }
 ```
 > Returns boolean status.<br>
@@ -64,12 +64,11 @@ PUT:
 
 
 ### Update avatar:
-`http://localhost:5000/api/user/changeAvatar` <br>
+`http://localhost:5000/api/user/changeAvatar/<USER_ID>` <br>
 ```
 PUT:
 {
-    "avatarURL": "avatarURL_Link",
-    "id": *USER_ID*
+    "avatarURL": "avatarURL_Link"
 }
 ```
 > Returns boolean status.<br>
@@ -77,12 +76,9 @@ PUT:
 
 
 ### Delete user:
-`http://localhost:5000/api/user/delete` <br>
+`http://localhost:5000/api/user/delete/<USER_ID>` <br>
 ```
-DELETE:
-{
-    "id": *USER_ID*
-}
+DELETE
 ```
 > Returns boolean status.<br>
 > If false, it means that the user with the given id does not exist.
@@ -99,7 +95,7 @@ POST:
     "canvas": "some big data"
 }
 ```
-> Returns bool status.<br>
+> Returns boolean status.<br>
 > If false then userID isn't found.
 
 ## Items queries
@@ -113,5 +109,5 @@ POST:
     "image": "image_link"
 }
 ```
-> Returns bool status.<br>
+> Returns item id of false.<br>
 > If false then name already exists.
