@@ -125,7 +125,7 @@ export class UserController {
                     ]
                 );
                 console.log("Success!");
-                res.json(user.rows[0]);
+                res.json(Object.values(user.rows[0])[0]);
             } else {
                 console.log("Failure!");
                 res.json(false);
