@@ -17,11 +17,11 @@ export class UserController {
                 `SELECT id FROM Auth WHERE login = '${req.body.login}';`
             );
             if (!user.rowCount) {
-                await db.query(
-                    `INSERT INTO Auth (login, nickname, password) VALUES ('${req.body.login}', '${req.body.login}', '${req.body.password}');`
+                const newUser = await db.query(
+                    `INSERT INTO Auth (login, nickname, password) VALUES ('${req.body.login}', '${req.body.login}', '${req.body.password}') RETURNING nickname, about, avatar_url, last_login_utc;`
                 );
                 console.log("Success!");
-                res.json(true);
+                res.json(newUser.rows[0]);
             } else {
                 console.log("Failure!");
                 res.json(false);
@@ -103,7 +103,7 @@ export class UserController {
         console.log("[Check] User with name = " + req.body.login + "...");
         if (req.body.login != null && req.body.password != null) {
             const user = await db.query(
-                `SELECT id FROM Auth WHERE login = '${req.body.login}' AND password = '${req.body.password}';`
+                `SELECT nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc FROM Auth WHERE login = '${req.body.login}' AND password = '${req.body.password}';`
             );
             if (user.rowCount) {
                 let data = new Date();
@@ -125,7 +125,7 @@ export class UserController {
                     ]
                 );
                 console.log("Success!");
-                res.json(Object.values(user.rows[0])[0]);
+                res.json(user.rows[0]);
             } else {
                 console.log("Failure!");
                 res.json(false);

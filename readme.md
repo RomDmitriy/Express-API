@@ -1,4 +1,4 @@
-# API Documentation (v3.2)
+# API Documentation (v3.3)
 
 Last tested on: v3.1-alpha
 
@@ -16,7 +16,7 @@ POST:
     "password": "testtest"
 }
 ```
-> Returns boolean status.<br>
+> Returns nickname, about, avatar_url, last_login_utc.<br>
 > If false, then means one of the conditions above is not met.
 
 ### Check user in database:
@@ -28,7 +28,7 @@ POST:
     "password": "testtest"
 }
 ```
-> Returns id or false.<br>
+> Returns nickname, about, avatar_url, last_login_utc or false.<br>
 > If false, then there is no user with such a username and password, or missing parameters.<br>
 > Update lastLoginIn in database.
 

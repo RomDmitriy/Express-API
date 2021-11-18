@@ -11,10 +11,10 @@ authRouter.post("/register", userController.createUser);
 authRouter.post("/check", userController.check);
 
 //fetch all info
-authRouter.get("/fetch/:id", userController.getUser);
+//authRouter.get("/fetch/:id", userController.getUser);
 
 //fetch some info
-authRouter.get("/fetch/:id/:query", userController.getUserQuery);
+//authRouter.get("/fetch/:id/:query", userController.getUserQuery);
 
 //update password
 authRouter.put("/changePass/:id", userController.updatePassword);
