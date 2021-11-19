@@ -1,6 +1,8 @@
-# API Documentation (v3.3)
+# API Documentation (v4.0-alpha)
 
-Last tested on: v3.1-alpha
+____
+Last tested on: v4.0-alpha
+____
 
 ## Auth queries
 
@@ -16,8 +18,24 @@ POST:
     "password": "testtest"
 }
 ```
-> Returns nickname, about, avatar_url, last_login_utc.<br>
-> If false, then means one of the conditions above is not met.
+> If (201 status) then returns token.<br>
+> If (409 status) then user already exists.<br>
+> If (400 status) then some field is empty.<br>
+
+### Login user:
+`http://localhost:5000/api/user/login` <br>
+```
+POST:
+{
+    "login": "test",
+    "password": "testtest"
+}
+```
+> If (200 status) then returns token.<br>
+> If (400 status) then user not found or bad request.<br>
+
+____
+# NOT WORKING IN V4.0-alpha
 
 ### Check user in database:
 `http://localhost:5000/api/user/check` <br>

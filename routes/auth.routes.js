@@ -7,8 +7,11 @@ const userController = new UserController();
 //register
 authRouter.post("/register", userController.createUser);
 
+//login
+authRouter.post("/login", userController.loginUser);
+
 //isFound
-authRouter.post("/check", userController.check);
+//authRouter.post("/check", userController.check);
 
 //fetch all info
 //authRouter.get("/fetch/:id", userController.getUser);
@@ -17,15 +20,15 @@ authRouter.post("/check", userController.check);
 //authRouter.get("/fetch/:id/:query", userController.getUserQuery);
 
 //update password
-authRouter.put("/changePass/:id", userController.updatePassword);
+//authRouter.put("/changePass/:id", userController.updatePassword);
 
 //update avatar
-authRouter.put("/changeAvatar/:id", userController.updateAvatar);
+//authRouter.put("/changeAvatar/:id", userController.updateAvatar);
 
 //update nickname
-authRouter.put("/changeNickname/:id", userController.updateNickname);
+//authRouter.put("/changeNickname/:id", userController.updateNickname);
 
 //delete user
-authRouter.delete("/delete/:id", userController.deleteUser);
+//authRouter.delete("/delete/:id", userController.deleteUser);
 
 export default authRouter;
