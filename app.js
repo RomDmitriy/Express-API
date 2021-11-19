@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 
 app.use(express.json());
-app.use(passport.initialize());
+// app.use(passport.initialize());
 // //
 // import { Strategy as JwtStrategy } from 'passport-jwt';
 // import { ExtractJwt } from 'passport-jwt';
