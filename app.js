@@ -3,7 +3,6 @@ import apartmentRouter from "./routes/apartment.routes.js";
 import authRouter from "./routes/auth.routes.js";
 import itemsRouter from "./routes/item.routes.js";
 import cors from "cors";
-import passport from "passport";
 
 const app = express();
 
