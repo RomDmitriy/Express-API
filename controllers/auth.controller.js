@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { jwt_key } from "../private-info.js";
 import faker from "faker";
+import { getCurrTime } from "../currTime.js";
 
 function getCurrDateTime() {
     let data = new Date();
@@ -90,8 +91,10 @@ export class UserController {
             //если пользователь не найден
             if (!user.rowCount) {
                 console.log("Failure!");
-                res.status(400);
+                res.status(400).json();
+                return;
             }
+
             if (bcrypt.compareSync(req.body.password, user.rows[0].password)) {
                 //генерируем токены
                 let newTokens = {
@@ -116,13 +119,13 @@ export class UserController {
             //если неправильный пароль
             else {
                 console.log("Failure!");
-                res.status(401);
+                res.status(401).json();
             }
         }
         //если неправильный запрос
         else {
             console.log("Failure!");
-            res.status(400);
+            res.status(400).json();
         }
     }
 
@@ -176,7 +179,7 @@ export class UserController {
         console.log("[Get user] User with token = '" + req.body.token + "'");
 
         try {
-            let userDecoded = jwt.verify(req.parabodyms.token, jwt_key);
+            let userDecoded = jwt.verify(req.body.token, jwt_key);
 
             const user = await db.query(
                 `SELECT login, nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`

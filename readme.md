@@ -49,8 +49,20 @@ POST:
 > If (404 status) then user with this refresh_token not found.<br>
 > Updates last_login_utc in database.<br>
 
+### Get all information about user
+(without id and password) <br>
+`http://localhost:5000/api/user/fetch/<USER_ID>` <br>
+```
+GET
+```
+> Returns login, username, about, avatarURL, lastLoginUTC as JSON or false.<br>
+> If false, then user not found or missing <USER_ID><br>
+> If (200 status) then Returns login, username, about, avatar_url, lastLoginUTC
+> If (401 status) then access_token has expired.<br>
+> If (404 status) then user with this access_token not found.<br>
+
 ____
-# NOT WORKING IN V4.0-alpha
+# NOT WORKING IN >V4.0-alpha
 
 ### Check user in database
 `http://localhost:5000/api/user/check` <br>
@@ -64,15 +76,6 @@ POST:
 > Returns nickname, about, avatar_url, last_login_utc or false.<br>
 > If false, then there is no user with such a username and password, or missing parameters.<br>
 > Update lastLoginIn in database.
-
-### Get all information about user
-(without id and password) <br>
-`http://localhost:5000/api/user/fetch/<USER_ID>` <br>
-```
-GET
-```
-> Returns login, username, about, avatarURL, lastLoginUTC as JSON or false.
-> If false, then user not found or missing <USER_ID>
 
 ### Get some user information
 (id and password are not allowed) <br>
