@@ -41,8 +41,10 @@ export class UserController {
             req.body.password.length < 33
         ) {
 
+            let user;
+
             try {
-            const user = await db.query(
+            user = await db.query(
                 `SELECT id FROM Auth WHERE login = '${req.body.login}';`
             );
             }
@@ -103,8 +105,11 @@ export class UserController {
                 "..."
         );
         if (req.body.login != null && req.body.password != null) {
+
+            let user;
+
             try {
-            const user = await db.query(
+            user = await db.query(
                 `SELECT password FROM Auth WHERE login = '${req.body.login}';`
             );
             }
@@ -178,8 +183,10 @@ export class UserController {
             return;
         }
 
+        let user;
+
         try {
-        const user = await db.query(
+        user = await db.query(
             `SELECT login, password FROM Auth WHERE refreshtoken = '${req.body.refresh_token}'`
         );
         }
@@ -232,8 +239,10 @@ export class UserController {
         try {
             let userDecoded = jwt.verify(req.body.access_token, jwt_key);
 
+            let user;
+
             try {
-            const user = await db.query(
+            user = await db.query(
                 `SELECT login, nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
             );
             }
