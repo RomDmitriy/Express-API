@@ -59,8 +59,8 @@ export class UserController {
                 };
 
                 await db.query(
-                    `INSERT INTO Auth (login, nickname, password, refreshtoken) VALUES (
-                        '${req.body.login}', '${req.body.login}', '${secPass}', '${tokens.refresh_token}');`
+                    `INSERT INTO Auth (login, nickname, password, last_login_utc, refreshtoken) VALUES (
+                        '${req.body.login}', '${req.body.login}', '${secPass}', '${getCurrDateTime()}', '${tokens.refresh_token}');`
                 );
 
                 console.log("Success!");
@@ -176,10 +176,10 @@ export class UserController {
 
     async getUser(req, res) {
         console.log();
-        console.log("[Get user] User with token = '" + req.body.token + "'");
+        console.log("[Get user] User with token = '" + req.body.access_token + "'");
 
         try {
-            let userDecoded = jwt.verify(req.body.token, jwt_key);
+            let userDecoded = jwt.verify(req.body.access_token, jwt_key);
 
             const user = await db.query(
                 `SELECT login, nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
@@ -193,7 +193,7 @@ export class UserController {
                 res.json(false);
             }
         } catch (err) {
-            console.log("Failure! Token expired!");
+            console.log("Failure!");
             res.status(401).json();
             return;
         }

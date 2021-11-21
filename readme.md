@@ -53,7 +53,10 @@ POST:
 (without id and password) <br>
 `http://localhost:5000/api/user/fetch/<USER_ID>` <br>
 ```
-GET
+POST
+{
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRlc3RfdG9rZW4iLCJwYXNzd29yZCI6IiQyYSQxMCRsdG84SDVaUnBRWXZTQUZQbDMyTFB1QnFsdHJEL2tpZ3h1azYwMXpBbmpJUmNjUHp4eUI0VyIsImlhdCI6MTYzNzUwNzIxNCwiZXhwIjoxNjM3NTA5MDE0fQ.gaF2jkTmBt-EzE1vUmUVbWNHrywPejGSWEI1mF-I5Q4"
+}
 ```
 > If (200 status) then Returns login, username, about, avatar_url, lastLoginUTC
 > If (401 status) then access_token has expired.<br>

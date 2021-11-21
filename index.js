@@ -3,6 +3,6 @@ import { getCurrTime } from "./currTime.js";
 
 app.listen(5000, () =>
     console.log(
-        getCurrTime() + " - API v4.2.2-alpha started working!"
+        getCurrTime() + " - API v4.2.3-alpha started working!"
     )
 );
