@@ -11,9 +11,6 @@ app.use(cors());
 
 app.use(express.json());
 
-app.use(passport.initialize());
-import "./passport.js";
-
 app.use("/api/user", authRouter);
 app.use("/api/apart", apartmentRouter);
 app.use("/api/item", itemsRouter);

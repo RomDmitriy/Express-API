@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { jwt_key } from "../private-info.js";
 import faker from "faker";
 import { getCurrTime } from "../currTime.js";
+import colors from "colors";
 
 function getCurrDateTime() {
     let data = new Date();
@@ -28,7 +29,7 @@ export class UserController {
         console.log();
         console.log(
             getCurrTime() +
-                "[Create user] User with login = " +
+                " - [Create user] User with login = " +
                 req.body.login +
                 "..."
         );
@@ -39,9 +40,19 @@ export class UserController {
             req.body.password.length > 5 &&
             req.body.password.length < 33
         ) {
+
+            try {
             const user = await db.query(
                 `SELECT id FROM Auth WHERE login = '${req.body.login}';`
             );
+            }
+            catch(err) {
+                console.log("Failure!".red);
+                console.log("Warning! Database is not avaliable!".red);
+                res.status(500).json();
+                return;
+            }
+
             if (!user.rowCount) {
                 const secPass = bcrypt.hashSync(
                     req.body.password,
@@ -65,19 +76,19 @@ export class UserController {
                     );
                 }
                 catch(err) {
-                    console.log("Failure!");
+                    console.log("Failure!".red.bgWhite);
                     res.status(409).json();
                     return;
                 }
 
-                console.log("Success!");
+                console.log("Success!".green);
                 res.status(201).json(tokens);
             } else {
-                console.log("Failure!");
+                console.log("Failure!".red);
                 res.status(409).json();
             }
         } else {
-            console.log("Failure!");
+            console.log("Failure!".red);
             res.status(400).json();
         }
     }
@@ -92,12 +103,20 @@ export class UserController {
                 "..."
         );
         if (req.body.login != null && req.body.password != null) {
+            try {
             const user = await db.query(
                 `SELECT password FROM Auth WHERE login = '${req.body.login}';`
             );
+            }
+            catch(err) {
+                console.log("Failure!".red);
+                console.log("Warning! Database is not avaliable!".red);
+                res.status(500).json();
+                return;
+            }
             //если пользователь не найден
             if (!user.rowCount) {
-                console.log("Failure!");
+                console.log("Failure!".red);
                 res.status(404).json();
                 return;
             }
@@ -116,22 +135,30 @@ export class UserController {
                     refresh_token: faker.finance.bitcoinAddress()
                 };
 
+                try {
                 await db.query(
                     `UPDATE Auth SET refreshtoken = '${newTokens.refresh_token}', last_login_utc = '${getCurrDateTime()}' WHERE login = '${req.body.login}'`
                 );
+                }
+                catch(err) {
+                    console.log("Failure!".red);
+                    console.log("Warning! Database is not avaliable!".red);
+                    res.status(500).json();
+                    return;
+                }
 
-                console.log("Success!");
+                console.log("Success!".green);
                 res.status(200).json(newTokens);
             }
             //если неправильный пароль
             else {
-                console.log("Failure!");
+                console.log("Failure!".red);
                 res.status(401).json();
             }
         }
         //если неправильный запрос
         else {
-            console.log("Failure!");
+            console.log("Failure!".red);
             res.status(400).json();
         }
     }
@@ -146,17 +173,26 @@ export class UserController {
         );
 
         if (req.body.refresh_token === null) {
-            console.log("Failure!");
+            console.log("Failure!".red);
             res.status(400).json();
             return;
         }
+
+        try {
         const user = await db.query(
             `SELECT login, password FROM Auth WHERE refreshtoken = '${req.body.refresh_token}'`
         );
+        }
+        catch(err) {
+            console.log("Failure!".red);
+            console.log("Warning! Database is not avaliable!".red);
+            res.status(500).json();
+            return;
+        }
 
         //если пользователя с таким токеном нет
         if (!user.rowCount) {
-            console.log("Failure!");
+            console.log("Failure!".red);
             res.status(404).json();
             return;
         }
@@ -173,11 +209,19 @@ export class UserController {
             refresh_token: faker.finance.bitcoinAddress(),
         };
 
+        try {
         await db.query(
             `UPDATE Auth SET refreshtoken = '${newTokens.refresh_token}', last_login_utc = '${getCurrDateTime()}' WHERE refreshtoken = '${req.body.refresh_token}'`
         );
+        }
+        catch(err) {
+            console.log("Failure!".red);
+            console.log("Warning! Database is not avaliable!".red);
+            res.status(500).json();
+            return;
+        }
 
-        console.log("Success!");
+        console.log("Success!".green);
         res.status(200).json(newTokens);
     }
 
@@ -188,19 +232,28 @@ export class UserController {
         try {
             let userDecoded = jwt.verify(req.body.access_token, jwt_key);
 
+            try {
             const user = await db.query(
                 `SELECT login, nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
             );
+            }
+            catch(err) {
+                console.log("Failure!".red);
+                console.log("Warning! Database is not avaliable!".red);
+                res.status(500).json();
+                return;
+            }
+
             //проверка на нахождение пользователя в БД
             if (user.rowCount) {
-                console.log("Success!");
+                console.log("Success!".green);
                 res.json(user.rows[0]);
             } else {
-                console.log("Failure!");
+                console.log("Failure!".red);
                 res.json(false);
             }
         } catch (err) {
-            console.log("Failure!");
+            console.log("Failure!".red);
             res.status(401).json();
             return;
         }
@@ -231,14 +284,14 @@ export class UserController {
     //                     user.rows[0].id,
     //                 ]
     //             );
-    //             console.log("Success!");
+    //             console.log("Success!".green);
     //             res.json(user.rows[0]);
     //         } else {
-    //             console.log("Failure!");
+    //             console.log("Failure!".red);
     //             res.json(false);
     //         }
     //     } else {
-    //         console.log("Failure!");
+    //         console.log("Failure!".red);
     //         res.json(false);
     //     }
     // }
@@ -275,14 +328,14 @@ export class UserController {
     //             `SELECT ${query} FROM Auth WHERE id = ${req.params.id};`
     //         );
     //         if (user.rowCount) {
-    //             console.log("Success!");
+    //             console.log("Success!".green);
     //             res.json(user.rows[0]);
     //         } else {
-    //             console.log("Failure!");
+    //             console.log("Failure!".red);
     //             res.json(false);
     //         }
     //     } else {
-    //         console.log("Failure!");
+    //         console.log("Failure!".red);
     //         res.json(false);
     //     }
     // }
@@ -299,10 +352,10 @@ export class UserController {
     //         await db.query(
     //             `UPDATE Auth SET password = '${req.body.password}' WHERE id = ${req.params.id};`
     //         );
-    //         console.log("Success!");
+    //         console.log("Success!".green);
     //         res.json(true);
     //     } else {
-    //         console.log("Failure!");
+    //         console.log("Failure!".red);
     //         res.json(false);
     //     }
     // }
@@ -317,10 +370,10 @@ export class UserController {
     //         await db.query(
     //             `UPDATE Auth SET avatar_url = '${req.body.avatarURL}' WHERE id = ${req.params.id};`
     //         );
-    //         console.log("Success!");
+    //         console.log("Success!".green);
     //         res.json(true);
     //     } else {
-    //         console.log("Failure!");
+    //         console.log("Failure!".red);
     //         res.json(false);
     //     }
     // }
@@ -337,10 +390,10 @@ export class UserController {
     //         await db.query(
     //             `UPDATE Auth SET nickname = '${req.body.nick}' WHERE id = ${req.params.id};`
     //         );
-    //         console.log("Success!");
+    //         console.log("Success!".green);
     //         res.json(true);
     //     } else {
-    //         console.log("Failure!");
+    //         console.log("Failure!".red);
     //         res.json(false);
     //     }
     // }
@@ -356,10 +409,10 @@ export class UserController {
     //             `DELETE FROM Apartments WHERE owner_id = ${req.params.id};`
     //         );
     //         await db.query(`DELETE FROM Auth WHERE id = ${req.params.id};`);
-    //         console.log("Success!");
+    //         console.log("Success!".green);
     //         res.json(true);
     //     } else {
-    //         console.log("Failure!");
+    //         console.log("Failure!".red);
     //         res.json(false);
     //     }
     // }

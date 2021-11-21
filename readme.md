@@ -1,4 +1,4 @@
-# API Documentation (v4.2-alpha)
+# API Documentation (v4.4-alpha)
 
 ____
 Last tested on: v4.2-alpha
