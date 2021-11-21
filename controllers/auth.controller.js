@@ -58,10 +58,13 @@ export class UserController {
                     refresh_token: faker.finance.bitcoinAddress(),
                 };
 
-                await db.query(
-                    `INSERT INTO Auth (login, nickname, password, last_login_utc, refreshtoken) VALUES (
-                        '${req.body.login}', '${req.body.login}', '${secPass}', '${getCurrDateTime()}', '${tokens.refresh_token}');`
-                );
+                try {
+                    await db.query(
+                        `INSERT INTO Auth (login, nickname, password, last_login_utc, refreshtoken) VALUES (
+                            '${req.body.login}', '${req.body.login}', '${secPass}', '${getCurrDateTime()}', '${tokens.refresh_token}');`
+                    );
+                }
+                catch(err) {}
 
                 console.log("Success!");
                 res.status(201).json(tokens);
