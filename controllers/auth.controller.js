@@ -67,6 +67,7 @@ export class UserController {
                 catch(err) {
                     console.log("Failure!");
                     res.status(409).json();
+                    return;
                 }
 
                 console.log("Success!");
