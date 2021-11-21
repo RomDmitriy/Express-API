@@ -55,8 +55,6 @@ POST:
 ```
 GET
 ```
-> Returns login, username, about, avatarURL, lastLoginUTC as JSON or false.<br>
-> If false, then user not found or missing <USER_ID><br>
 > If (200 status) then Returns login, username, about, avatar_url, lastLoginUTC
 > If (401 status) then access_token has expired.<br>
 > If (404 status) then user with this access_token not found.<br>
