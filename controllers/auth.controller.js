@@ -64,7 +64,10 @@ export class UserController {
                             '${req.body.login}', '${req.body.login}', '${secPass}', '${getCurrDateTime()}', '${tokens.refresh_token}');`
                     );
                 }
-                catch(err) {}
+                catch(err) {
+                    console.log("Failure!");
+                    res.status(409).json();
+                }
 
                 console.log("Success!");
                 res.status(201).json(tokens);
