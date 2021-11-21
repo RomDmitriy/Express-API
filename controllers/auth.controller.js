@@ -2,14 +2,36 @@ import db from "../db.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { jwt_key } from "../private-info.js";
+import faker from "faker";
+
+function getCurrDateTime() {
+    let data = new Date();
+    return (
+        data.getUTCFullYear() +
+        "-" +
+        (data.getUTCMonth() + 1) +
+        "-" +
+        data.getUTCDate() +
+        " " +
+        data.getUTCHours() +
+        ":" +
+        data.getUTCMinutes() +
+        ":" +
+        data.getUTCSeconds()
+    );
+}
 
 export class UserController {
     async createUser(req, res) {
+        //логирование
         console.log();
         console.log(
-            "[Create user] User with login = " + req.body.login + "..."
+            getCurrTime() +
+                "[Create user] User with login = " +
+                req.body.login +
+                "..."
         );
-        //validator
+        //валидация длин данных
         if (
             req.body.login.length > 3 &&
             req.body.login.length < 33 &&
@@ -25,43 +47,38 @@ export class UserController {
                     bcrypt.genSaltSync(10)
                 );
 
-                await db.query(
-                    `INSERT INTO Auth (login, nickname, password) VALUES ('${req.body.login}', '${req.body.login}', '${secPass}');`
-                );
+                //генерируем токены
+                const tokens = {
+                    access_token: jwt.sign(
+                        { login: req.body.login, password: secPass },
+                        jwt_key,
+                        { expiresIn: 1800 }
+                    ),
+                    refresh_token: faker.finance.bitcoinAddress(),
+                };
 
-                //генерируем токен
-                const token = jwt.sign(
-                    {
-                        login: req.body.login,
-                        password: secPass,
-                    },
-                    jwt_key,
-                    { expiresIn: 3600 }
+                await db.query(
+                    `INSERT INTO Auth (login, nickname, password, refreshtoken) VALUES (
+                        '${req.body.login}', '${req.body.login}', '${secPass}', '${tokens.refresh_token}');`
                 );
 
                 console.log("Success!");
-                res.status(201).json({
-                    token: token,
-                });
+                res.status(201).json(tokens);
             } else {
                 console.log("Failure!");
-                res.status(409);
+                res.status(409).json();
             }
         } else {
             console.log("Failure!");
-            res.status(400);
+            res.status(400).json();
         }
     }
 
     async loginUser(req, res) {
+        //логирование
         console.log();
         console.log(
-            new Date().getUTCHours() +
-                3 +
-                ":" +
-                new Date().getUTCMinutes() +
-                ":" +
-                new Date().getUTCSeconds() +
+            getCurrTime() +
                 " - [Login user] User with login = " +
                 req.body.login +
                 "..."
@@ -70,29 +87,36 @@ export class UserController {
             const user = await db.query(
                 `SELECT password FROM Auth WHERE login = '${req.body.login}';`
             );
-            //если пользователь найден
-            if (user.rowCount) {
-                if (
-                    bcrypt.compareSync(req.body.password, user.rows[0].password)
-                ) {
-                    //генерируем токен
-                    const token = jwt.sign(
+            //если пользователь не найден
+            if (!user.rowCount) {
+                console.log("Failure!");
+                res.status(400);
+            }
+            if (bcrypt.compareSync(req.body.password, user.rows[0].password)) {
+                //генерируем токены
+                let newTokens = {
+                    access_token: jwt.sign(
                         {
-                            login: req.body.login,
+                            login: user.rows[0].login,
                             password: user.rows[0].password,
                         },
                         jwt_key,
-                        { expiresIn: 3600 }
-                    );
+                        { expiresIn: 1800 }
+                    ),
+                    refresh_token: faker.finance.bitcoinAddress()
+                };
 
-                    console.log("Success!");
-                    res.status(200).json({ token: token });
-                }
+                await db.query(
+                    `UPDATE Auth SET refreshtoken = '${newTokens.refresh_token}',  WHERE login = '${req.body.login}'`
+                );
+
+                console.log("Success!");
+                res.status(200).json(newTokens);
             }
-            //если пользователя с таким логином нет
+            //если неправильный пароль
             else {
                 console.log("Failure!");
-                res.status(400);
+                res.status(401);
             }
         }
         //если неправильный запрос
@@ -102,19 +126,78 @@ export class UserController {
         }
     }
 
+    //обновление токенов
+    async updateJWT(req, res) {
+        console.log();
+        console.log(
+            "[Update token] User with refresh token = '" +
+                req.body.refresh_token +
+                "'"
+        );
+
+        if (req.body.refresh_token === null) {
+            console.log("Failure!");
+            res.status(400).json();
+            return;
+        }
+        const user = await db.query(
+            `SELECT login, password FROM Auth WHERE refreshtoken = '${req.body.refresh_token}'`
+        );
+
+        //если пользователя с таким токеном нет
+        if (!user.rowCount) {
+            console.log("Failure!");
+            res.status(404).json();
+            return;
+        }
+
+        let newTokens = {
+            access_token: jwt.sign(
+                {
+                    login: user.rows[0].login,
+                    password: user.rows[0].password,
+                },
+                jwt_key,
+                { expiresIn: 1800 }
+            ),
+            refresh_token: faker.finance.bitcoinAddress(),
+        };
+
+        await db.query(
+            `UPDATE Auth SET refreshtoken = '${newTokens.refresh_token}', last_login_utc = '${getCurrDateTime()}' WHERE refreshtoken = '${req.body.refresh_token}'`
+        );
+
+        console.log("Success!");
+        res.status(200).json(newTokens);
+    }
+
+    async getUser(req, res) {
+        console.log();
+        console.log("[Get user] User with token = '" + req.body.token + "'");
+
+        try {
+            let userDecoded = jwt.verify(req.parabodyms.token, jwt_key);
+
+            const user = await db.query(
+                `SELECT login, nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
+            );
+            //проверка на нахождение пользователя в БД
+            if (user.rowCount) {
+                console.log("Success!");
+                res.json(user.rows[0]);
+            } else {
+                console.log("Failure!");
+                res.json(false);
+            }
+        } catch (err) {
+            console.log("Failure! Token expired!");
+            res.status(401).json();
+            return;
+        }
+    }
+
     // async check(req, res) {
     //     console.log();
-    //     console.log(
-    //         new Date().getUTCHours() +
-    //             3 +
-    //             ":" +
-    //             new Date().getUTCMinutes() +
-    //             ":" +
-    //             new Date().getUTCSeconds() +
-    //             " - [Check] User with name = " +
-    //             req.body.login +
-    //             "..."
-    //     );
     //     if (req.body.login != null && req.body.password != null) {
     //         const user = await db.query(
     //             `SELECT nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc FROM Auth WHERE login = '${req.body.login}' AND password = '${req.body.password}';`
@@ -138,28 +221,6 @@ export class UserController {
     //                     user.rows[0].id,
     //                 ]
     //             );
-    //             console.log("Success!");
-    //             res.json(user.rows[0]);
-    //         } else {
-    //             console.log("Failure!");
-    //             res.json(false);
-    //         }
-    //     } else {
-    //         console.log("Failure!");
-    //         res.json(false);
-    //     }
-    // }
-
-    // async getUser(req, res) {
-    //     console.log();
-    //     console.log("[Get user] User with id = " + req.params.id + "...");
-    //     //проверка на передачу параметра
-    //     if (req.params.id != null && parseInt(req.params.id) == req.params.id) {
-    //         const user = await db.query(
-    //             `SELECT login, nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc FROM Auth WHERE id = ${req.params.id};`
-    //         );
-    //         //проверка на нахождение пользователя в БД
-    //         if (user.rowCount) {
     //             console.log("Success!");
     //             res.json(user.rows[0]);
     //         } else {
@@ -216,80 +277,80 @@ export class UserController {
     //     }
     // }
 
-    async updatePassword(req, res) {
-        console.log();
-        console.log(
-            "[Update password] User with id = " + req.params.id + "..."
-        );
-        const checkUser = await db.query(
-            `SELECT id FROM Auth WHERE id = ${req.params.id};`
-        );
-        if (checkUser.rowCount && req.body.password != null) {
-            await db.query(
-                `UPDATE Auth SET password = '${req.body.password}' WHERE id = ${req.params.id};`
-            );
-            console.log("Success!");
-            res.json(true);
-        } else {
-            console.log("Failure!");
-            res.json(false);
-        }
-    }
+    // async updatePassword(req, res) {
+    //     console.log();
+    //     console.log(
+    //         "[Update password] User with id = " + req.params.id + "..."
+    //     );
+    //     const checkUser = await db.query(
+    //         `SELECT id FROM Auth WHERE id = ${req.params.id};`
+    //     );
+    //     if (checkUser.rowCount && req.body.password != null) {
+    //         await db.query(
+    //             `UPDATE Auth SET password = '${req.body.password}' WHERE id = ${req.params.id};`
+    //         );
+    //         console.log("Success!");
+    //         res.json(true);
+    //     } else {
+    //         console.log("Failure!");
+    //         res.json(false);
+    //     }
+    // }
 
-    async updateAvatar(req, res) {
-        console.log();
-        console.log("[Update avatar] User with id = " + req.params.id + "...");
-        const checkUser = await db.query(
-            `SELECT id FROM Auth WHERE id = ${req.params.id}`
-        );
-        if (checkUser.rowCount) {
-            await db.query(
-                `UPDATE Auth SET avatar_url = '${req.body.avatarURL}' WHERE id = ${req.params.id};`
-            );
-            console.log("Success!");
-            res.json(true);
-        } else {
-            console.log("Failure!");
-            res.json(false);
-        }
-    }
+    // async updateAvatar(req, res) {
+    //     console.log();
+    //     console.log("[Update avatar] User with id = " + req.params.id + "...");
+    //     const checkUser = await db.query(
+    //         `SELECT id FROM Auth WHERE id = ${req.params.id}`
+    //     );
+    //     if (checkUser.rowCount) {
+    //         await db.query(
+    //             `UPDATE Auth SET avatar_url = '${req.body.avatarURL}' WHERE id = ${req.params.id};`
+    //         );
+    //         console.log("Success!");
+    //         res.json(true);
+    //     } else {
+    //         console.log("Failure!");
+    //         res.json(false);
+    //     }
+    // }
 
-    async updateNickname(req, res) {
-        console.log();
-        console.log(
-            "[Update nickname] User with id = " + req.params.id + "..."
-        );
-        const checkUser = await db.query(
-            `SELECT id FROM Auth WHERE id = ${req.params.id}`
-        );
-        if (checkUser.rowCount) {
-            await db.query(
-                `UPDATE Auth SET nickname = '${req.body.nick}' WHERE id = ${req.params.id};`
-            );
-            console.log("Success!");
-            res.json(true);
-        } else {
-            console.log("Failure!");
-            res.json(false);
-        }
-    }
+    // async updateNickname(req, res) {
+    //     console.log();
+    //     console.log(
+    //         "[Update nickname] User with id = " + req.params.id + "..."
+    //     );
+    //     const checkUser = await db.query(
+    //         `SELECT id FROM Auth WHERE id = ${req.params.id}`
+    //     );
+    //     if (checkUser.rowCount) {
+    //         await db.query(
+    //             `UPDATE Auth SET nickname = '${req.body.nick}' WHERE id = ${req.params.id};`
+    //         );
+    //         console.log("Success!");
+    //         res.json(true);
+    //     } else {
+    //         console.log("Failure!");
+    //         res.json(false);
+    //     }
+    // }
 
-    async deleteUser(req, res) {
-        console.log();
-        console.log("[Delete user] User with id = " + req.params.id + "...");
-        const delUser = await db.query(
-            `SELECT id FROM Auth WHERE id = ${req.params.id}`
-        );
-        if (delUser.rowCount) {
-            await db.query(
-                `DELETE FROM Apartments WHERE owner_id = ${req.params.id};`
-            );
-            await db.query(`DELETE FROM Auth WHERE id = ${req.params.id};`);
-            console.log("Success!");
-            res.json(true);
-        } else {
-            console.log("Failure!");
-            res.json(false);
-        }
-    }
+    // async deleteUser(req, res) {
+    //     console.log();
+    //     console.log("[Delete user] User with id = " + req.params.id + "...");
+    //     const delUser = await db.query(
+    //         `SELECT id FROM Auth WHERE id = ${req.params.id}`
+    //     );
+    //     if (delUser.rowCount) {
+    //         await db.query(
+    //             `DELETE FROM Apartments WHERE owner_id = ${req.params.id};`
+    //         );
+    //         await db.query(`DELETE FROM Auth WHERE id = ${req.params.id};`);
+    //         console.log("Success!");
+    //         res.json(true);
+    //     } else {
+    //         console.log("Failure!");
+    //         res.json(false);
+    //     }
+    // }
 }

@@ -10,11 +10,14 @@ authRouter.post("/register", userController.createUser);
 //login
 authRouter.post("/login", userController.loginUser);
 
+//update tokens
+authRouter.post("/update", userController.updateJWT);
+
 //isFound
 //authRouter.post("/check", userController.check);
 
 //fetch all info
-//authRouter.get("/fetch/:id", userController.getUser);
+authRouter.post("/fetch/", userController.getUser);
 
 //fetch some info
 //authRouter.get("/fetch/:id/:query", userController.getUserQuery);
