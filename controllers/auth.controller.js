@@ -91,7 +91,7 @@ export class UserController {
             //если пользователь не найден
             if (!user.rowCount) {
                 console.log("Failure!");
-                res.status(400).json();
+                res.status(404).json();
                 return;
             }
 
@@ -110,7 +110,7 @@ export class UserController {
                 };
 
                 await db.query(
-                    `UPDATE Auth SET refreshtoken = '${newTokens.refresh_token}',  WHERE login = '${req.body.login}'`
+                    `UPDATE Auth SET refreshtoken = '${newTokens.refresh_token}', last_login_utc = '${getCurrDateTime()}' WHERE login = '${req.body.login}'`
                 );
 
                 console.log("Success!");
