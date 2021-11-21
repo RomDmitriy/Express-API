@@ -1,7 +1,7 @@
-# API Documentation (v4.4.1)
+# API Documentation (v4.5.1)
 
 ____
-Last tested on: v4.2-alpha
+Last tested on: v4.5.1
 ____
 
 ## Auth queries
@@ -75,8 +75,8 @@ POST:
 }
 ```
 > Returns nickname, about, avatar_url, last_login_utc or false.<br>
-> If false, then there is no user with such a username and password, or missing parameters.<br>
-> Update lastLoginIn in database.
+> If false, then there is no user with such a username and password, or missing parameters.<br><br>
+> Also updates lastLoginIn in database.
 
 ### Get some user information
 (id and password are not allowed) <br>
