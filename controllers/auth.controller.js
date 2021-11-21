@@ -28,10 +28,9 @@ export class UserController {
         //логирование
         console.log();
         console.log(
-            getCurrTime() +
-                " - [Create user] User with login = " +
-                req.body.login +
-                "..."
+            (" " + getCurrTime() + " ").bgWhite.black +
+                " Creating new user with login = " +
+                req.body.login.bgGray.hidden
         );
         //валидация длин данных
         if (
@@ -40,17 +39,18 @@ export class UserController {
             req.body.password.length > 5 &&
             req.body.password.length < 33
         ) {
-
             let user;
 
             try {
-            user = await db.query(
-                `SELECT id FROM Auth WHERE login = '${req.body.login}';`
-            );
-            }
-            catch(err) {
+                user = await db.query(
+                    `SELECT id FROM Auth WHERE login = '${req.body.login}';`
+                );
+            } catch (err) {
                 console.log("Failure!".red);
-                console.log("Warning! Database is not avaliable!".red);
+                console.log(
+                    "Warning!".bgYellow.bold.black +
+                        "Database is not avaliable!".yellow
+                );
                 res.status(500).json();
                 return;
             }
@@ -74,10 +74,13 @@ export class UserController {
                 try {
                     await db.query(
                         `INSERT INTO Auth (login, nickname, password, last_login_utc, refreshtoken) VALUES (
-                            '${req.body.login}', '${req.body.login}', '${secPass}', '${getCurrDateTime()}', '${tokens.refresh_token}');`
+                            '${req.body.login}', '${
+                            req.body.login
+                        }', '${secPass}', '${getCurrDateTime()}', '${
+                            tokens.refresh_token
+                        }');`
                     );
-                }
-                catch(err) {
+                } catch (err) {
                     console.log("Failure!".red.bgWhite);
                     res.status(409).json();
                     return;
@@ -99,23 +102,23 @@ export class UserController {
         //логирование
         console.log();
         console.log(
-            getCurrTime() +
-                " - [Login user] User with login = " +
-                req.body.login +
-                "..."
+            (" " + getCurrTime() + " ").bgWhite.black +
+                " Auth user with login = " +
+                req.body.login.bgGray.hidden
         );
         if (req.body.login != null && req.body.password != null) {
-
             let user;
 
             try {
-            user = await db.query(
-                `SELECT password FROM Auth WHERE login = '${req.body.login}';`
-            );
-            }
-            catch(err) {
+                user = await db.query(
+                    `SELECT password FROM Auth WHERE login = '${req.body.login}';`
+                );
+            } catch (err) {
                 console.log("Failure!".red);
-                console.log("Warning! Database is not avaliable!".red);
+                console.log(
+                    "Warning!".bgYellow.bold.black +
+                        " Database is not avaliable!".red
+                );
                 res.status(500).json();
                 return;
             }
@@ -131,23 +134,30 @@ export class UserController {
                 let newTokens = {
                     access_token: jwt.sign(
                         {
-                            login: user.rows[0].login,
+                            login: req.body.login,
                             password: user.rows[0].password,
                         },
                         jwt_key,
                         { expiresIn: 1800 }
                     ),
-                    refresh_token: faker.finance.bitcoinAddress()
+                    refresh_token: faker.finance.bitcoinAddress(),
                 };
 
                 try {
-                await db.query(
-                    `UPDATE Auth SET refreshtoken = '${newTokens.refresh_token}', last_login_utc = '${getCurrDateTime()}' WHERE login = '${req.body.login}'`
-                );
-                }
-                catch(err) {
+                    await db.query(
+                        `UPDATE Auth SET refreshtoken = '${
+                            newTokens.refresh_token
+                        }', last_login_utc = '${getCurrDateTime()}' WHERE login = '${
+                            req.body.login
+                        }'`
+                    );
+                } catch (err) {
                     console.log("Failure!".red);
-                    console.log("Warning! Database is not avaliable!".red);
+                    console.log(
+                        "Warning!".bgYellow.bold.black +
+                            "".yellow.bold +
+                            " Database is not avaliable!".red
+                    );
                     res.status(500).json();
                     return;
                 }
@@ -172,9 +182,9 @@ export class UserController {
     async updateJWT(req, res) {
         console.log();
         console.log(
-            "[Update token] User with refresh token = '" +
-                req.body.refresh_token +
-                "'"
+            (" " + getCurrTime() + " ").bgWhite.black +
+                "Update token for user with refresh token = " +
+                req.body.refresh_token.bgGray.hidden
         );
 
         if (req.body.refresh_token === null) {
@@ -186,13 +196,16 @@ export class UserController {
         let user;
 
         try {
-        user = await db.query(
-            `SELECT login, password FROM Auth WHERE refreshtoken = '${req.body.refresh_token}'`
-        );
-        }
-        catch(err) {
+            user = await db.query(
+                `SELECT login, password FROM Auth WHERE refreshtoken = '${req.body.refresh_token}'`
+            );
+        } catch (err) {
             console.log("Failure!".red);
-            console.log("Warning! Database is not avaliable!".red);
+            console.log(
+                "Warning!".bgYellow.bold.black +
+                    "".yellow.bold +
+                    " Database is not avaliable!".red
+            );
             res.status(500).json();
             return;
         }
@@ -217,13 +230,20 @@ export class UserController {
         };
 
         try {
-        await db.query(
-            `UPDATE Auth SET refreshtoken = '${newTokens.refresh_token}', last_login_utc = '${getCurrDateTime()}' WHERE refreshtoken = '${req.body.refresh_token}'`
-        );
-        }
-        catch(err) {
+            await db.query(
+                `UPDATE Auth SET refreshtoken = '${
+                    newTokens.refresh_token
+                }', last_login_utc = '${getCurrDateTime()}' WHERE refreshtoken = '${
+                    req.body.refresh_token
+                }'`
+            );
+        } catch (err) {
             console.log("Failure!".red);
-            console.log("Warning! Database is not avaliable!".red);
+            console.log(
+                "Warning!".bgYellow.bold.black +
+                    "".yellow.bold +
+                    " Database is not avaliable!".red
+            );
             res.status(500).json();
             return;
         }
@@ -232,9 +252,13 @@ export class UserController {
         res.status(200).json(newTokens);
     }
 
+    //получение данных
     async getUser(req, res) {
         console.log();
-        console.log("[Get user] User with token = '" + req.body.access_token + "'");
+        console.log(
+            (" " + getCurrTime() + " ").bgWhite.black +
+            "Get user with token = " + req.body.access_token.bgGray.hidden
+        );
 
         try {
             let userDecoded = jwt.verify(req.body.access_token, jwt_key);
@@ -242,13 +266,16 @@ export class UserController {
             let user;
 
             try {
-            user = await db.query(
-                `SELECT login, nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
-            );
-            }
-            catch(err) {
+                user = await db.query(
+                    `SELECT login, nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
+                );
+            } catch (err) {
                 console.log("Failure!".red);
-                console.log("Warning! Database is not avaliable!".red);
+                console.log(
+                    "Warning!".bgYellow.bold.black +
+                        "".yellow.bold +
+                        " Database is not avaliable!".red
+                );
                 res.status(500).json();
                 return;
             }
@@ -256,10 +283,10 @@ export class UserController {
             //проверка на нахождение пользователя в БД
             if (user.rowCount) {
                 console.log("Success!".green);
-                res.json(user.rows[0]);
+                res.status(200).json(user.rows[0]);
             } else {
                 console.log("Failure!".red);
-                res.json(false);
+                res.status(404).json();
             }
         } catch (err) {
             console.log("Failure!".red);
