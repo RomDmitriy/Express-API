@@ -1,7 +1,7 @@
-# API Documentation (v4.1-alpha)
+# API Documentation (v4.2-alpha)
 
 ____
-Last tested on: v4.1-alpha
+Last tested on: v4.2-alpha
 ____
 
 ## Auth queries
