@@ -51,10 +51,8 @@ export class UserController {
                     `SELECT id FROM Auth WHERE login = '${req.body.login}';`
                 );
             } catch (err) {
-                console.log("Failure!".red);
                 console.log(
-                    "Warning!".bgYellow.bold.black +
-                        "Database is not avaliable!".yellow
+                    "Warning!  Database is not avaliable!".bgYellow.bold.black
                 );
                 res.status(500).json();
                 return;
@@ -124,10 +122,8 @@ export class UserController {
                     `SELECT password FROM Auth WHERE login = '${req.body.login}';`
                 );
             } catch (err) {
-                console.log("Failure!".red);
                 console.log(
-                    "Warning!".bgYellow.bold.black +
-                        " Database is not avaliable!".red
+                    "Warning!  Database is not avaliable!".bgYellow.bold.black
                 );
                 res.status(500).json();
                 return;
@@ -162,11 +158,8 @@ export class UserController {
                         }'`
                     );
                 } catch (err) {
-                    console.log("Failure!".red);
                     console.log(
-                        "Warning!".bgYellow.bold.black +
-                            "".yellow.bold +
-                            " Database is not avaliable!".red
+                        "Warning!  Database is not avaliable!".bgYellow.bold.black
                     );
                     res.status(500).json();
                     return;
@@ -215,11 +208,8 @@ export class UserController {
                 `SELECT login, password FROM Auth WHERE refreshtoken = '${req.body.refresh_token}'`
             );
         } catch (err) {
-            console.log("Failure!".red);
             console.log(
-                "Warning!".bgYellow.bold.black +
-                    "".yellow.bold +
-                    " Database is not avaliable!".red
+                "Warning!  Database is not avaliable!".bgYellow.bold.black
             );
             res.status(500).json();
             return;
@@ -253,11 +243,8 @@ export class UserController {
                 }'`
             );
         } catch (err) {
-            console.log("Failure!".red);
             console.log(
-                "Warning!".bgYellow.bold.black +
-                    "".yellow.bold +
-                    " Database is not avaliable!".red
+                "Warning!  Database is not avaliable!".bgYellow.bold.black
             );
             res.status(500).json();
             return;
@@ -291,11 +278,8 @@ export class UserController {
                     `SELECT nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
                 );
             } catch (err) {
-                console.log("Failure!".red);
                 console.log(
-                    "Warning!".bgYellow.bold.black +
-                        "".yellow.bold +
-                        " Database is not avaliable!".red
+                    "Warning!  Database is not avaliable!".bgYellow.bold.black
                 );
                 res.status(500).json();
                 return;
