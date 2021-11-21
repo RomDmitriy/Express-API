@@ -25,12 +25,17 @@ function getCurrDateTime() {
 
 export class UserController {
     async createUser(req, res) {
+        let login = req.body.login;
+        if (login === undefined) {
+            login = "undefined";
+        }
+
         //логирование
         console.log();
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
                 " Creating new user with login = " +
-                req.body.login.bgGray.hidden
+                login.bgGray.hidden
         );
         //валидация длин данных
         if (
@@ -99,12 +104,17 @@ export class UserController {
     }
 
     async loginUser(req, res) {
+        let login = req.body.login;
+        if (login === undefined) {
+            login = "undefined";
+        }
+
         //логирование
         console.log();
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
                 " Auth user with login = " +
-                req.body.login.bgGray.hidden
+                login.bgGray.hidden
         );
         if (req.body.login != null && req.body.password != null) {
             let user;
@@ -180,11 +190,16 @@ export class UserController {
 
     //обновление токенов
     async updateJWT(req, res) {
+        let token = req.body.refresh_token;
+        if (token === undefined) {
+            token = "undefined";
+        }
+
         console.log();
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
                 "Update token for user with refresh token = " +
-                req.body.refresh_token.bgGray.hidden
+                token.bgGray.hidden
         );
 
         if (req.body.refresh_token === null) {
@@ -254,10 +269,16 @@ export class UserController {
 
     //получение данных
     async getUser(req, res) {
+        let token = req.body.access_token;
+        if (token === undefined) {
+            token = "undefined";
+        }
+
         console.log();
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
-            "Get user with token = " + req.body.access_token.bgGray.hidden
+                "Get user with token = " +
+                token.bgGray.hidden
         );
 
         try {
@@ -267,7 +288,7 @@ export class UserController {
 
             try {
                 user = await db.query(
-                    `SELECT login, nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
+                    `SELECT nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
                 );
             } catch (err) {
                 console.log("Failure!".red);
@@ -294,43 +315,6 @@ export class UserController {
             return;
         }
     }
-
-    // async check(req, res) {
-    //     console.log();
-    //     if (req.body.login != null && req.body.password != null) {
-    //         const user = await db.query(
-    //             `SELECT nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc FROM Auth WHERE login = '${req.body.login}' AND password = '${req.body.password}';`
-    //         );
-    //         if (user.rowCount) {
-    //             let data = new Date();
-    //             await db.query(
-    //                 `UPDATE Auth SET last_login_utc = $1 WHERE id = $2;`,
-    //                 [
-    //                     data.getUTCFullYear() +
-    //                         "-" +
-    //                         (data.getUTCMonth() + 1) +
-    //                         "-" +
-    //                         data.getUTCDate() +
-    //                         " " +
-    //                         data.getUTCHours() +
-    //                         ":" +
-    //                         data.getUTCMinutes() +
-    //                         ":" +
-    //                         data.getUTCSeconds(),
-    //                     user.rows[0].id,
-    //                 ]
-    //             );
-    //             console.log("Success!".green);
-    //             res.json(user.rows[0]);
-    //         } else {
-    //             console.log("Failure!".red);
-    //             res.json(false);
-    //         }
-    //     } else {
-    //         console.log("Failure!".red);
-    //         res.json(false);
-    //     }
-    // }
 
     // async getUserQuery(req, res) {
     //     console.log();

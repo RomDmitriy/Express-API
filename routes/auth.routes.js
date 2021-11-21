@@ -13,9 +13,6 @@ authRouter.post("/login", userController.loginUser);
 //update tokens
 authRouter.post("/update", userController.updateJWT);
 
-//isFound
-//authRouter.post("/check", userController.check);
-
 //fetch all info
 authRouter.post("/fetch/", userController.getUser);
 

@@ -15,7 +15,7 @@ export function getCurrTime() {
     res += mm + ":";
 
     if (ss < 10) {
-        res += "0"
+        res += "0";
     }
     res += ss;
     return res;
