@@ -10,8 +10,9 @@ import { getCurrDateTime } from "../currTime.js";
 export class UserController {
     async createUser(req, res) {
         //защита от вылета
-        if (req.body.login === undefined) {
-            req.body.login = "undefined";
+        let login = req.body.login;
+        if (login === undefined) {
+            login = "undefined";
         }
 
         //логирование
@@ -19,7 +20,7 @@ export class UserController {
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
                 " Creating new user with login = " +
-                req.body.login.bgGray.hidden
+                login.bgGray.hidden
         );
 
         //валидация длин данных
@@ -248,7 +249,7 @@ export class UserController {
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
                 "Get user with access token = " +
-                token.bgGray.hidden
+                req.body.access_token.bgGray.hidden
         );
 
         //проверяем access_token на валидность
@@ -297,7 +298,7 @@ export class UserController {
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
                 "Get user with access token = " +
-                token.bgGray.hidden
+                req.body.access_token.bgGray.hidden
         );
 
         //проверяем access_token на валидность

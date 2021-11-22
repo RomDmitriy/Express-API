@@ -1,4 +1,4 @@
-# API Documentation (v4.6.5)
+# API Documentation (v4.6.6)
 
 ## Auth queries
 
