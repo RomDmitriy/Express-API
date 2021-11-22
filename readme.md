@@ -1,4 +1,4 @@
-# API Documentation (v4.7.1)
+# API Documentation (v4.7.2)
 
 ## Auth queries
 
@@ -36,7 +36,7 @@ POST:
 > If (404 status) then user not found.<br>
 > If (500 status) then database is not available.<br>
 
-> Update refresh_token in database.<br>
+> Updates last_time_utc and refresh_token in database.<br>
 
 ### Get new tokens
 `http://localhost:5000/api/user/check` <br>

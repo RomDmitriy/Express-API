@@ -132,7 +132,7 @@ export class UserController {
                     refresh_token: faker.finance.bitcoinAddress(),
                 };
 
-                //отправляем новый refresh_token в БД
+                //отправляем новый refresh_token и last_login_utc в БД
                 while (true) {
                     try {
                         await db.query(
