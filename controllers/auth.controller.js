@@ -37,7 +37,7 @@ export class UserController {
             );
 
             //генерируем токены
-            const tokens = {
+            let tokens = {
                 access_token: jwt.sign(
                     { login: req.body.login, password: secPass },
                     jwt_key,
@@ -47,24 +47,31 @@ export class UserController {
             };
 
             //отправляем запрос на добавление пользователя
-            try {
-                await db.query(
-                    `INSERT INTO Auth (login, nickname, password, last_login_utc, refreshtoken) VALUES (
+            while (true) {
+                try {
+                    await db.query(
+                        `INSERT INTO Auth (login, nickname, password, last_login_utc, refreshtoken, register_utc) VALUES (
                             '${req.body.login}', '${
-                        req.body.login
-                    }', '${secPass}', '${getCurrDateTime()}', '${
-                        tokens.refresh_token
-                    }');`
-                );
-            } catch (err) {
-                console.log("Failure!".red);
-                res.status(409).json(); //пользователь уже существует
+                            req.body.login
+                        }', '${secPass}', '${getCurrDateTime()}', '${tokens.refresh_token}', '${getCurrDateTime()}');`
+                    );
+                } catch (err) {
+                    //обработка когда refresh_token уже занят
+                    if (err.detail !== undefined && err.detail.includes("refreshtoken")) {
+                        console.log("Refresh token already exists :)".yellow);
+                        tokens.refresh_token = faker.finance.bitcoinAddress();
+                        continue;
+                    }
+                    console.log("Failure!".red);
+                    res.status(409).json(); //пользователь уже существует
+                    return;
+                }
+
+                //возвращаем токены и сообщение об успехе
+                console.log("Success!".green);
+                res.status(201).json(tokens); //всё хорошо
                 return;
             }
-
-            //возвращаем токены и сообщение об успехе
-            console.log("Success!".green);
-            res.status(201).json(tokens); //всё хорошо
         } else {
             console.log("Failure!".red);
             res.status(400).json(); //плохой запрос (пустые поля или неправильная длина)
@@ -126,26 +133,38 @@ export class UserController {
                 };
 
                 //отправляем новый refresh_token в БД
-                try {
-                    await db.query(
-                        `UPDATE Auth SET refreshtoken = '${
-                            newTokens.refresh_token
-                        }', last_login_utc = '${getCurrDateTime()}' WHERE login = '${
-                            req.body.login
-                        }'`
-                    );
-                } catch (err) {
-                    console.log(
-                        "Warning!  Database is not avaliable!".bgYellow.bold
-                            .black
-                    );
-                    res.status(500).json(); //проблема с подключением к БД
+                while (true) {
+                    try {
+                        await db.query(
+                            `UPDATE Auth SET refreshtoken = '${
+                                newTokens.refresh_token
+                            }', last_login_utc = '${getCurrDateTime()}' WHERE login = '${
+                                req.body.login
+                            }'`
+                        );
+                    } catch (err) {
+                        //обработка когда refresh_token уже занят
+                        if (err.detail !== undefined && err.detail.includes("refreshtoken")) {
+                            console.log(
+                                "Refresh token already exists :)".yellow
+                            );
+                            tokens.refresh_token =
+                                faker.finance.bitcoinAddress();
+                            continue;
+                        }
+                        console.log(
+                            "Warning!  Database is not avaliable!".bgYellow.bold
+                                .black
+                        );
+                        res.status(500).json(); //проблема с подключением к БД
+                        return;
+                    }
+
+                    //выводим сообщение об успехе и возвращаем новые токены
+                    console.log("Success!".green);
+                    res.status(200).json(newTokens); //всё хорошо
                     return;
                 }
-
-                //выводим сообщение об успехе и возвращаем новые токены
-                console.log("Success!".green);
-                res.status(200).json(newTokens); //всё хорошо
             }
             //если неправильный пароль
             else {
@@ -217,25 +236,34 @@ export class UserController {
         };
 
         //обновляем refresh_token в БД
-        try {
-            await db.query(
-                `UPDATE Auth SET refreshtoken = '${
-                    newTokens.refresh_token
-                }', last_login_utc = '${getCurrDateTime()}' WHERE refreshtoken = '${
-                    req.body.refresh_token
-                }'`
-            );
-        } catch (err) {
-            console.log(
-                "Warning!  Database is not avaliable!".bgYellow.bold.black
-            );
-            res.status(500).json(); //проблема с подключением к БД
+        while (true) {
+            try {
+                await db.query(
+                    `UPDATE Auth SET refreshtoken = '${
+                        newTokens.refresh_token
+                    }', last_login_utc = '${getCurrDateTime()}' WHERE refreshtoken = '${
+                        req.body.refresh_token
+                    }'`
+                );
+            } catch (err) {
+                //обработка когда refresh_token уже занят
+                if (err.detail !== undefined && err.detail.includes("refreshtoken")) {
+                    console.log("Refresh token already exists :)".yellow);
+                    tokens.refresh_token = faker.finance.bitcoinAddress();
+                    continue;
+                }
+                console.log(
+                    "Warning!  Database is not avaliable!".bgYellow.bold.black
+                );
+                res.status(500).json(); //проблема с подключением к БД
+                return;
+            }
+
+            //выводим сообщение об успехе и возвращаем новые токены
+            console.log("Success!".green);
+            res.status(200).json(newTokens); //всё хорошо
             return;
         }
-
-        //выводим сообщение об успехе и возвращаем новые токены
-        console.log("Success!".green);
-        res.status(200).json(newTokens); //всё хорошо
     }
 
     async getUserPublicInformation(req, res) {
@@ -262,7 +290,7 @@ export class UserController {
             //получаем публичные данные
             try {
                 user = await db.query(
-                    `SELECT nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
+                    `SELECT nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc, to_char(register_utc, 'DD.MM.YYYY HH24:MI:SS') as register_utc FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
                 );
             } catch (err) {
                 console.log(
@@ -276,6 +304,7 @@ export class UserController {
             if (user.rowCount) {
                 console.log("Success!".green);
                 res.status(200).json(user.rows[0]); //всё хорошо
+                return;
             } else {
                 console.log("Failure!".red);
                 res.status(404).json(); //пользователь с таким токеном не существует
@@ -310,14 +339,14 @@ export class UserController {
 
             if (req.body.password !== undefined) {
                 parsedInfo += {
-                    "password": req.body.password
-                }
+                    password: req.body.password,
+                };
             }
 
             if (req.body.about !== undefined) {
                 parsedInfo += {
-                    "about": req.body.about
-                }
+                    about: req.body.about,
+                };
             }
 
             let user;
@@ -339,6 +368,7 @@ export class UserController {
             if (user.rowCount) {
                 console.log("Success!".green);
                 res.status(200).json(user.rows[0]); //всё хорошо
+                return;
             } else {
                 console.log("Failure!".red);
                 res.status(404).json(); //пользователь с таким токеном не существует
