@@ -1,8 +1,4 @@
-# API Documentation (v4.6)
-
-____
-Last tested on: v4.5.2
-____
+# API Documentation (v4.6.1)
 
 ## Auth queries
 
@@ -21,6 +17,9 @@ POST:
 > If (201 status) then returns access_token (expires in 30 minutes) and refresh_token (expires after re-login or refresh tokens).<br>
 > If (400 status) then login or password is null, or wrong length.<br>
 > If (409 status) then user already exists.<br>
+> If (500 status) then database is not available.<br>
+>
+> Updates login, nickname, password and last_time_utc in database.<br>
 
 ### Login user
 `http://localhost:5000/api/user/login` <br>
@@ -35,6 +34,7 @@ POST:
 > If (400 status) then bad request.<br>
 > If (401 status) then wrong password.<br>
 > If (404 status) then user not found.<br>
+> If (500 status) then database is not available.<br>
 
 ### Get new tokens
 `http://localhost:5000/api/user/check` <br>
@@ -47,11 +47,13 @@ POST:
 > If (200 status) then returns access_token (expires in 30 minutes) and refresh_token (expires after re-login or refresh tokens).<br>
 > If (400 status) then refresh_token is null.<br>
 > If (404 status) then user with this refresh_token not found.<br>
+> If (500 status) then database is not available.<br>
+>
 > Updates last_login_utc in database.<br>
 
 ### Get all information about user
 (without id, login and password) <br>
-`http://localhost:5000/api/user/fetch/<USER_ID>` <br>
+`http://localhost:5000/api/user/fetch/` <br>
 ```
 POST
 {
@@ -61,6 +63,7 @@ POST
 > If (200 status) then returns username, about, avatar_url, last_login_utc<br>
 > If (401 status) then access_token has expired or bad access_token.<br>
 > If (404 status) then user with this access_token not found.<br>
+> If (500 status) then database is not available.<br>
 
 ____
 # NOT WORKING IN >V4.0-alpha

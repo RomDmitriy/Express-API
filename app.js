@@ -6,8 +6,10 @@ import cors from "cors";
 
 const app = express();
 
+//для работы POST
 app.use(cors());
 
+//для нормальной работы JSON
 app.use(express.json());
 
 app.use("/api/user", authRouter);

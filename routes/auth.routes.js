@@ -4,17 +4,17 @@ import { UserController } from "../controllers/auth.controller.js";
 const authRouter = Router();
 const userController = new UserController();
 
-//register
+//регистрация
 authRouter.post("/register", userController.createUser);
 
-//login
-authRouter.post("/login", userController.loginUser);
+//логин
+authRouter.post("/login", userController.userAuthorization);
 
-//update tokens
-authRouter.post("/update", userController.updateJWT);
+//обновить токены
+authRouter.post("/update", userController.getNewJWTtokens);
 
-//fetch all info
-authRouter.post("/fetch/", userController.getUser);
+//получить данные пользователя
+authRouter.post("/fetch/", userController.getUserPublicInformation);
 
 //fetch some info
 //authRouter.get("/fetch/:id/:query", userController.getUserQuery);
