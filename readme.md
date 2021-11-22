@@ -1,4 +1,4 @@
-# API Documentation (v4.6.6)
+# API Documentation (v4.7.1)
 
 ## Auth queries
 
@@ -62,7 +62,7 @@ POST
     "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRlc3RfdG9rZW4iLCJwYXNzd29yZCI6IiQyYSQxMCRsdG84SDVaUnBRWXZTQUZQbDMyTFB1QnFsdHJEL2tpZ3h1azYwMXpBbmpJUmNjUHp4eUI0VyIsImlhdCI6MTYzNzUwNzIxNCwiZXhwIjoxNjM3NTA5MDE0fQ.gaF2jkTmBt-EzE1vUmUVbWNHrywPejGSWEI1mF-I5Q4"
 }
 ```
-> If (200 status) then returns username, about, avatar_url and last_login_utc.<br>
+> If (200 status) then returns username, about, avatar_url, last_login_utc and register_utc.<br>
 > If (401 status) then access_token has expired or bad access_token.<br>
 > If (404 status) then user with this access_token not found.<br>
 > If (500 status) then database is not available.<br>
