@@ -249,7 +249,7 @@ export class UserController {
         console.log();
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
-                "Get user with token = " +
+                "Get user with access token = " +
                 token.bgGray.hidden
         );
 
@@ -286,6 +286,16 @@ export class UserController {
             res.status(401).json(); //токен недействителен
             return;
         }
+    }
+
+    async updateUserInformation(req, res) {
+                //логирование
+                console.log();
+                console.log(
+                    (" " + getCurrTime() + " ").bgWhite.black +
+                        "Get user with access token = " +
+                        token.bgGray.hidden
+                );
     }
 
     // async getUserQuery(req, res) {

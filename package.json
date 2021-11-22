@@ -1,11 +1,10 @@
 {
   "name": "postgresql-express",
-  "version": "0.0.1",
-  "description": "API for Angular",
+  "version": "4.6.3",
+  "description": "API for Alexey Ivashkin and Ivan Kubyshev",
   "main": "index.js",
   "scripts": {
-    "ser": "node .",
-    "dev": "nodemon ."
+    "server": "nodemon ."
   },
   "author": "Alexey Ivashkin",
   "license": "ISC",
@@ -20,7 +19,6 @@
     "pg": "^8.7.1"
   },
   "devDependencies": {
-    "forever": "^4.0.1",
     "nodemon": "^2.0.15"
   },
   "type": "module"
