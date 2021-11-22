@@ -8,7 +8,6 @@ import "colors";
 import { getCurrDateTime } from "../currTime.js";
 
 export class UserController {
-
     async createUser(req, res) {
         //защита от вылета
         if (req.body.login === undefined) {
@@ -112,7 +111,6 @@ export class UserController {
 
             //если пользователь найден, то сравниваем пароли
             if (bcrypt.compareSync(req.body.password, user.rows[0].password)) {
-
                 //генерируем новые токены
                 let newTokens = {
                     access_token: jwt.sign(
@@ -289,13 +287,66 @@ export class UserController {
     }
 
     async updateUserInformation(req, res) {
-                //логирование
-                console.log();
-                console.log(
-                    (" " + getCurrTime() + " ").bgWhite.black +
-                        "Get user with access token = " +
-                        token.bgGray.hidden
+        //защита от вылета
+        if (req.body.access_token === undefined) {
+            req.body.access_token = "undefined";
+        }
+
+        //логирование
+        console.log();
+        console.log(
+            (" " + getCurrTime() + " ").bgWhite.black +
+                "Get user with access token = " +
+                token.bgGray.hidden
+        );
+
+        //проверяем access_token на валидность
+        try {
+            //если токен невалидный, то jwt.verify вызовет ошибку
+            let userDecoded = jwt.verify(req.body.access_token, jwt_key);
+
+            let parsedInfo;
+
+            if (req.body.password !== undefined) {
+                parsedInfo += {
+                    "password": req.body.password
+                }
+            }
+
+            if (req.body.about !== undefined) {
+                parsedInfo += {
+                    "about": req.body.about
+                }
+            }
+
+            let user;
+
+            //получаем публичные данные
+            try {
+                user = await db.query(
+                    `SELECT nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
                 );
+            } catch (err) {
+                console.log(
+                    "Warning!  Database is not avaliable!".bgYellow.bold.black
+                );
+                res.status(500).json(); //проблема с подключением к БД
+                return;
+            }
+
+            //проверка на нахождение пользователя в БД
+            if (user.rowCount) {
+                console.log("Success!".green);
+                res.status(200).json(user.rows[0]); //всё хорошо
+            } else {
+                console.log("Failure!".red);
+                res.status(404).json(); //пользователь с таким токеном не существует
+            }
+        } catch (err) {
+            console.log("Failure!".red);
+            res.status(401).json(); //токен недействителен
+            return;
+        }
     }
 
     // async getUserQuery(req, res) {
