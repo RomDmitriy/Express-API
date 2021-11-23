@@ -16,19 +16,10 @@ authRouter.post("/update", userController.getNewJWTtokens);
 //получить данные пользователя
 authRouter.post("/fetch/", userController.getUserPublicInformation);
 
-//fetch some info
-//authRouter.get("/fetch/:id/:query", userController.getUserQuery);
+//сбросить пароль
+authRouter.put("/resetPassword/", userController.resetPassword);
 
-//update password
-//authRouter.put("/changePass/:id", userController.updatePassword);
-
-//update avatar
-//authRouter.put("/changeAvatar/:id", userController.updateAvatar);
-
-//update nickname
-//authRouter.put("/changeNickname/:id", userController.updateNickname);
-
-//delete user
-//authRouter.delete("/delete/:id", userController.deleteUser);
+//удалить пользователя
+authRouter.delete("/deleteUser/", userController.deleteUser);
 
 export default authRouter;

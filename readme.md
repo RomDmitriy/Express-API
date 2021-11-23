@@ -1,4 +1,4 @@
-# API Documentation (v4.7.2)
+# API Documentation (v4.8)
 
 ## Auth queries
 
@@ -53,8 +53,8 @@ POST:
 >
 > Updates last_login_utc and refresh_token in database.<br>
 
-### Get all information about user
-(without id, login and password) <br>
+### Get all public information about user
+(without id, login, password and refresh_token) <br>
 `http://localhost:5000/api/user/fetch/` <br>
 ```
 POST
@@ -67,42 +67,34 @@ POST
 > If (404 status) then user with this access_token not found.<br>
 > If (500 status) then database is not available.<br>
 
-____
-# NOT WORKING IN >V4.0-alpha
-
-### Check user in database
-`http://localhost:5000/api/user/check` <br>
+### Reset password
+`http://localhost:5000/api/user/resetPassword/` <br>
 ```
-POST:
+POST
 {
     "login": "test",
-    "password": "testtest"
+    "new_password": "New Password"
 }
 ```
-> Returns nickname, about, avatar_url, last_login_utc or false.<br>
-> If false, then there is no user with such a username and password, or missing parameters.<br><br>
-> Also updates lastLoginIn in database.
+> If (200 status) then password successfully changed.<br>
+> If (404 status) then user with this login not found.<br>
+> If (500 status) then database is not available.<br>
 
-### Get some user information
-(id and password are not allowed) <br>
-`http://localhost:5000/api/user/fetch/<USER_ID>/<FIELDS>` <br>
-> Returns requested fields as JSON or false.
-> If false, then user not found or missing <USER_ID>
-> FIELDS - enumeration of needed fields (Avaliable fields: login, username, about, avatar_url, last_login_utc).
->> Example of crazy API Request:<br>`http://localhost:5000/api/user/fetch/<USER_ID>/login, nickname, id, avatar_urlabout ! last_login_utc->`<br>
->> This example returns login, about, avatarURL, lastLoginUTC as JSON.
-
-### Update password
-`http://localhost:5000/api/user/changePass/<USER_ID>` <br>
-(minimum: password - 6 letters) <br>
+### Delete user
+`http://localhost:5000/api/user/delete/` <br>
 ```
-PUT:
+DELETE
 {
-    "password": "New Password"
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRlc3RfdG9rZW4iLCJwYXNzd29yZCI6IiQyYSQxMCRsdG84SDVaUnBRWXZTQUZQbDMyTFB1QnFsdHJEL2tpZ3h1azYwMXpBbmpJUmNjUHp4eUI0VyIsImlhdCI6MTYzNzUwNzIxNCwiZXhwIjoxNjM3NTA5MDE0fQ.gaF2jkTmBt-EzE1vUmUVbWNHrywPejGSWEI1mF-I5Q4"
 }
 ```
-> Returns boolean status.<br>
-> If false, then user not found.
+> If (200 status) then user successfully deleted.<br>
+> If (401 status) then access_token has expired or bad access_token.<br>
+> If (404 status) then user with this access_token not found.<br>
+> If (500 status) then database is not available.<br>
+
+____
+# NOT WORKING IN >V4.0-alpha
 
 
 ### Update avatar
@@ -126,15 +118,6 @@ PUT:
 ```
 > Returns boolean status.<br>
 > If false, then user not found.
-
-
-### Delete user
-`http://localhost:5000/api/user/delete/<USER_ID>` <br>
-```
-DELETE
-```
-> Returns boolean status.<br>
-> If false, it means that the user with the given id does not exist.
 
 ## Apartments queries
 
