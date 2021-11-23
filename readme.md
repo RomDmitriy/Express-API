@@ -1,4 +1,4 @@
-# API Documentation (v4.8)
+# API Documentation (v4.8.1)
 
 ## Auth queries
 
@@ -79,6 +79,8 @@ POST
 > If (200 status) then password successfully changed.<br>
 > If (404 status) then user with this login not found.<br>
 > If (500 status) then database is not available.<br>
+>
+> Past access token will not be working, you must request new access token
 
 ### Delete user
 `http://localhost:5000/api/user/delete/` <br>
@@ -92,58 +94,3 @@ DELETE
 > If (401 status) then access_token has expired or bad access_token.<br>
 > If (404 status) then user with this access_token not found.<br>
 > If (500 status) then database is not available.<br>
-
-____
-# NOT WORKING IN >V4.0-alpha
-
-
-### Update avatar
-`http://localhost:5000/api/user/changeAvatar/<USER_ID>` <br>
-```
-PUT:
-{
-    "avatarURL": "avatarURL_Link"
-}
-```
-> Returns boolean status.<br>
-> If false, then user not found.
-
-### Update nickname
-`http://localhost:5000/api/user/changeNickname/<USER_ID>` <br>
-```
-PUT:
-{
-    "nick": "MACTEP-qpJIoMaCTeP"
-}
-```
-> Returns boolean status.<br>
-> If false, then user not found.
-
-## Apartments queries
-
-### Add apartment
-`http://localhost:5000/api/apart/add` <br>
-```
-POST:
-{
-    "userID": *OWNER_ID*,
-    "name": "test",
-    "canvas": "some big data"
-}
-```
-> Returns boolean status.<br>
-> If false then userID isn't found.
-
-## Items queries
-
-### Add item
-`http://localhost:5000/api/item/add` <br>
-```
-POST:
-{
-    "name": "test",
-    "image": "image_link"
-}
-```
-> Returns item id of false.<br>
-> If false then name already exists.
