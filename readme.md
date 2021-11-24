@@ -1,4 +1,4 @@
-# API Documentation (v4.8.1)
+# API Documentation (v4.9)
 
 ## Auth queries
 
@@ -37,6 +37,22 @@ POST:
 > If (500 status) then database is not available.<br>
 
 > Updates last_time_utc and refresh_token in database.<br>
+
+### Login user via access token
+`http://localhost:5000/api/user/loginToken` <br>
+```
+POST:
+{
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRlc3R0dCIsInBhc3N3b3JkIjoiJDJhJDEwJDV4bzRibDM4czczSmJIQmFlUmw1UC5lc0k0MXNUMC42LnBaUlhmZi5YekFBUXJDZ1RSNG5tIiwiaWF0IjoxNjM3NzQ0MjQ3LCJleHAiOjE2Mzc3NDYwNDd9.oLDKwnjSwZy1sR3EHVypsGgYXrT6k_Cq4VCr9n-VaII"
+}
+```
+> If (200 status) then user found.<br>
+> If (400 status) then bad request.<br>
+> If (401 status) then access_token has expired or bad access_token.<br>
+> If (404 status) then user with this token not found.<br>
+> If (500 status) then database is not available.<br>
+
+> Updates last_time_utc in database.<br>
 
 ### Get new tokens
 `http://localhost:5000/api/user/check` <br>

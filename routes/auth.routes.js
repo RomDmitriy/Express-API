@@ -10,6 +10,9 @@ authRouter.post("/register", userController.createUser);
 //логин
 authRouter.post("/login", userController.userAuthorization);
 
+//логин через access_token
+authRouter.post("/loginToken", userController.userAuthorizationToken);
+
 //обновить токены
 authRouter.post("/update", userController.getNewJWTtokens);
 

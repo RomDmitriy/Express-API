@@ -199,6 +199,96 @@ export class UserController {
         }
     }
 
+    async userAuthorizationToken(req, res) {
+        //защита от вылета
+        let access_token = req.body.access_token;
+        if (access_token === undefined) {
+            access_token = "undefined";
+        }
+
+        //логирование
+        console.log();
+        console.log(
+            (" " + getCurrTime() + " ").bgWhite.black +
+                " Auth user with access token = " +
+                access_token.bgGray.hidden
+        );
+
+        //защита от пустого токена
+        if (req.body.access_token != null) {
+            try {
+                //если токен невалидный, то jwt.verify вызовет ошибку
+                let userDecoded = jwt.verify(req.body.access_token, jwt_key);
+
+                let userPassword;
+
+                //пробуем найти пользователя с таким логином
+                try {
+                    userPassword = await db.query(
+                        `SELECT password FROM Auth WHERE login = '${userDecoded.login}';`
+                    );
+                } catch (err) {
+                    console.log("Failure!".red);
+                    console.log(
+                        "Warning!  Database is not avaliable!".bgYellow.bold
+                            .black
+                    );
+                    res.status(500).json(); //проблема с подключением к БД
+                    return;
+                }
+
+                //если пользователь не найден
+                if (!userPassword.rowCount) {
+                    console.log("Failure!".red);
+                    res.status(404).json(); //пользователь не найден
+                    return;
+                }
+
+                //если пользователь найден, то сравниваем пароли
+                if (userDecoded.password === userPassword.rows[0].password) {
+                    //отправляем новый last_login_utc в БД
+                    while (true) {
+                        try {
+                            await db.query(
+                                `UPDATE Auth SET last_login_utc = '${getCurrDateTime()}' WHERE login = '${
+                                    req.body.login
+                                }'`
+                            );
+                        } catch (err) {
+                            console.log("Failure!".red);
+                            console.log(
+                                "Warning!  Database is not avaliable!".bgYellow
+                                    .bold.black
+                            );
+                            res.status(500).json(); //проблема с подключением к БД
+                            return;
+                        }
+
+                        //выводим сообщение об успехе
+                        console.log("Success!".green);
+                        res.status(200).json(); //всё хорошо
+                        return;
+                    }
+                }
+                //если неправильный пароль
+                else {
+                    console.log("Failure!".red);
+                    res.status(401).json(); //неправильный пароль
+                }
+            } catch (err) {
+                //если токен недействителен
+                console.log("Failure!".red);
+                res.status(401).json(); //токен недействителен
+                return;
+            }
+        }
+        //если неправильный запрос
+        else {
+            console.log("Failure!".red);
+            res.status(400).json(); //неправильный запрос
+        }
+    }
+
     async getNewJWTtokens(req, res) {
         //защита от вылета
         if (req.body.refresh_token === undefined) {
@@ -335,6 +425,7 @@ export class UserController {
                 console.log("Failure!".red);
                 res.status(404).json(); //пользователь с таким токеном не существует
             }
+            //если токен недействителен
         } catch (err) {
             console.log("Failure!".red);
             res.status(401).json(); //токен недействителен
@@ -507,7 +598,7 @@ export class UserController {
                     console.log("Success!".green);
                     res.status(200).json(); //всё хорошо
                     return;
-                //если пользователь не найден
+                    //если пользователь не найден
                 } else {
                     console.log("Failure!".red);
                     res.status(404).json(); //пользователь с таким токеном не найден
