@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { jwt_key } from "../private-info.js";
 import faker from "faker";
-import { getCurrTime, getCurrDateTime } from "../times.js";
+import { getCurrTime, getCurrDateTime, getCurrDateTimeUTC } from "../times.js";
 import "colors";
 
 export class UserController {
@@ -49,12 +49,12 @@ export class UserController {
             while (true) {
                 try {
                     await db.query(
-                        `INSERT INTO Auth (login, nickname, password, last_login_utc, refreshtoken, register_utc) VALUES (
+                        `INSERT INTO Auth (login, nickname, password, last_login_utc, refreshtoken, register_time_utc) VALUES (
                             '${req.body.login}', '${
                             req.body.login
-                        }', '${secPass}', '${getCurrDateTime()}', '${
+                        }', '${secPass}', '${getCurrDateTimeUTC()}', '${
                             tokens.refresh_token
-                        }', '${getCurrDateTime()}');`
+                        }', '${getCurrDateTimeUTC()}');`
                     );
                 } catch (err) {
                     //обработка когда refresh_token уже занят
@@ -71,7 +71,7 @@ export class UserController {
                     if (err.errno === -4078) {
                         console.log("Failure!".red);
                         console.log(
-                            "Warning!  Database is not avaliable!".bgYellow.bold
+                            "Warning! Database is not avaliable!".bgYellow.bold
                                 .black
                         );
                         res.status(500).json(); //проблема с подключением к БД
@@ -120,7 +120,7 @@ export class UserController {
             } catch (err) {
                 console.log("Failure!".red);
                 console.log(
-                    "Warning!  Database is not avaliable!".bgYellow.bold.black
+                    "Warning! Database is not avaliable!".bgYellow.bold.black
                 );
                 res.status(500).json(); //проблема с подключением к БД
                 return;
@@ -154,7 +154,7 @@ export class UserController {
                         await db.query(
                             `UPDATE Auth SET refreshtoken = '${
                                 newTokens.refresh_token
-                            }', last_login_utc = '${getCurrDateTime()}' WHERE login = '${
+                            }', last_login_utc = '${getCurrDateTimeUTC()}' WHERE login = '${
                                 req.body.login
                             }'`
                         );
@@ -173,7 +173,7 @@ export class UserController {
                         }
                         console.log("Failure!".red);
                         console.log(
-                            "Warning!  Database is not avaliable!".bgYellow.bold
+                            "Warning! Database is not avaliable!".bgYellow.bold
                                 .black
                         );
                         res.status(500).json(); //проблема с подключением к БД
@@ -230,7 +230,7 @@ export class UserController {
                 } catch (err) {
                     console.log("Failure!".red);
                     console.log(
-                        "Warning!  Database is not avaliable!".bgYellow.bold
+                        "Warning! Database is not avaliable!".bgYellow.bold
                             .black
                     );
                     res.status(500).json(); //проблема с подключением к БД
@@ -250,14 +250,14 @@ export class UserController {
                     while (true) {
                         try {
                             await db.query(
-                                `UPDATE Auth SET last_login_utc = '${getCurrDateTime()}' WHERE login = '${
+                                `UPDATE Auth SET last_login_utc = '${getCurrDateTimeUTC()}' WHERE login = '${
                                     req.body.login
                                 }'`
                             );
                         } catch (err) {
                             console.log("Failure!".red);
                             console.log(
-                                "Warning!  Database is not avaliable!".bgYellow
+                                "Warning! Database is not avaliable!".bgYellow
                                     .bold.black
                             );
                             res.status(500).json(); //проблема с подключением к БД
@@ -320,7 +320,7 @@ export class UserController {
         } catch (err) {
             console.log("Failure!".red);
             console.log(
-                "Warning!  Database is not avaliable!".bgYellow.bold.black
+                "Warning! Database is not avaliable!".bgYellow.bold.black
             );
             res.status(500).json(); //проблема с подключением к БД
             return;
@@ -352,7 +352,7 @@ export class UserController {
                 await db.query(
                     `UPDATE Auth SET refreshtoken = '${
                         newTokens.refresh_token
-                    }', last_login_utc = '${getCurrDateTime()}' WHERE refreshtoken = '${
+                    }', last_login_utc = '${getCurrDateTimeUTC()}' WHERE refreshtoken = '${
                         req.body.refresh_token
                     }'`
                 );
@@ -368,7 +368,7 @@ export class UserController {
                 }
                 console.log("Failure!".red);
                 console.log(
-                    "Warning!  Database is not avaliable!".bgYellow.bold.black
+                    "Warning! Database is not avaliable!".bgYellow.bold.black
                 );
                 res.status(500).json(); //проблема с подключением к БД
                 return;
@@ -405,12 +405,12 @@ export class UserController {
             //получаем публичные данные
             try {
                 user = await db.query(
-                    `SELECT nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc, to_char(register_utc, 'DD.MM.YYYY HH24:MI:SS') as register_utc FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
+                    `SELECT nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc, to_char(register_time_utc, 'DD.MM.YYYY HH24:MI:SS') as register_time_utc FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
                 );
             } catch (err) {
                 console.log("Failure!".red);
                 console.log(
-                    "Warning!  Database is not avaliable!".bgYellow.bold.black
+                    "Warning! Database is not avaliable!".bgYellow.bold.black
                 );
                 res.status(500).json(); //проблема с подключением к БД
                 return;
@@ -461,7 +461,7 @@ export class UserController {
             } catch (err) {
                 console.log("Failure!".red);
                 console.log(
-                    "Warning!  Database is not avaliable!".bgYellow.bold.black
+                    "Warning! Database is not avaliable!".bgYellow.bold.black
                 );
                 res.status(500).json(); //проблема с подключением к БД
                 return;
@@ -484,7 +484,7 @@ export class UserController {
                 } catch (err) {
                     console.log("Failure!".red);
                     console.log(
-                        "Warning!  Database is not avaliable!".bgYellow.bold
+                        "Warning! Database is not avaliable!".bgYellow.bold
                             .black
                     );
                     res.status(500).json(); //проблема с подключением к БД
@@ -502,71 +502,138 @@ export class UserController {
         }
     }
 
-    //REQUEST DEPRECATED
-    // async updateUserInformation(req, res) {
-    //     //защита от вылета
-    //     if (req.body.access_token === undefined) {
-    //         req.body.access_token = "undefined";
-    //     }
+    async changeUserInformation(req, res) {
+        //защита от вылета
+        if (req.body.access_token === undefined) {
+            req.body.access_token = "undefined";
+        }
 
-    //     //логирование
-    //     console.log();
-    //     console.log(
-    //         (" " + getCurrTime() + " ").bgWhite.black +
-    //             "Get user with access token = " +
-    //             req.body.access_token.bgGray.hidden
-    //     );
+        //логирование
+        console.log();
+        console.log(
+            (" " + getCurrTime() + " ").bgWhite.black +
+                "Get user with access token = " +
+                req.body.access_token.bgGray.hidden
+        );
 
-    //     //проверяем access_token на валидность
-    //     try {
-    //         //если токен невалидный, то jwt.verify вызовет ошибку
-    //         let userDecoded = jwt.verify(req.body.access_token, jwt_key);
+        //проверяем access_token на валидность
+        try {
+            //если токен невалидный, то jwt.verify вызовет ошибку
+            const userDecoded = jwt.verify(req.body.access_token, jwt_key);
 
-    //         let parsedInfo;
+            //ищем нужного пользователя
+            try {
+                var userPassword = await db.query(
+                    `SELECT password FROM Auth WHERE login = '${userDecoded.login}'`
+                );
+            } catch (err) {
+                console.log("Failure!".red);
+                console.log(
+                    "Warning! Database is not avaliable!".bgYellow.bold.black
+                );
+                res.status(500).json(); //проблема с подключением к БД
+                return;
+            }
 
-    //         if (req.body.password !== undefined) {
-    //             parsedInfo += {
-    //                 password: req.body.password,
-    //             };
-    //         }
+            //если пользователь не найден
+            if (!userPassword.rowCount) {
+                console.log("Failure!".red);
+                res.status(404).json(); //пользователь не найден
+                return;
+            }
 
-    //         if (req.body.about !== undefined) {
-    //             parsedInfo += {
-    //                 about: req.body.about,
-    //             };
-    //         }
+            //если пользователь найден, то сравниваем пароли
+            if (userDecoded.password === userPassword.rows[0].password) {
+                //объект под переданные поля
+                var parsedInfo = {};
 
-    //         let user;
+                //парсинг смены ника (не логина!)
+                parsedInfo.nickname = req.body.nickname;
 
-    //         //получаем публичные данные
-    //         try {
-    //             user = await db.query(
-    //                 `SELECT nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
-    //             );
-    //         } catch (err) {
-    //             console.log("Failure!".red);
-    //             console.log(
-    //                 "Warning!  Database is not avaliable!".bgYellow.bold.black
-    //             );
-    //             res.status(500).json(); //проблема с подключением к БД
-    //             return;
-    //         }
+                //парсинг смены пароля
+                if (req.body.password !== undefined) {
+                    //шифруем пароль
+                    const secPass = bcrypt.hashSync(
+                        req.body.password,
+                        bcrypt.genSaltSync(10)
+                    );
 
-    //         //проверка на нахождение пользователя в БД
-    //         if (user.rowCount) {
-    //             console.log("Success!".green);
-    //             res.status(200).json(user.rows[0]); //всё хорошо
-    //             return;
-    //         } else {
-    //             console.log("Failure!".red);
-    //             res.status(404).json(); //пользователь с таким токеном не существует
-    //         }
-    //     } catch (err) {
-    //         console.log("Failure!".red);
-    //         res.status(401).json(); //токен недействителен
-    //         return;
-    //     }
-    // }
+                    //передаём в БД зашифрованный пароль
+                    parsedInfo.password = secPass;
+
+                    //генерируем новые токены
+                    var newTokens = {
+                        access_token: jwt.sign(
+                            {
+                                login: userDecoded.login,
+                                password: secPass,
+                            },
+                            jwt_key,
+                            { expiresIn: 1800 } //30 минут
+                        ),
+                        refresh_token: faker.finance.bitcoinAddress(),
+                    };
+
+                    //добавляем новый refresh_token в запрос для обновления оного в БД
+                    parsedInfo.refresh_token = newTokens.refresh_token;
+                }
+
+                //парсинг смены информации о себе
+                parsedInfo.about = req.body.about;
+
+                //парсинг смены аватарки
+                parsedInfo.avatar_url = req.body.avatar_url;
+
+                //парсинг id вопроса
+                parsedInfo.question_id = req.body.question_id;
+
+                //парсинг ответа на вопрос
+                parsedInfo.question_answer = req.body.question_answer;
+
+                //чистка от undefined
+                parsedInfo = JSON.parse(JSON.stringify(parsedInfo));
+
+                //массив обновляемых полей
+                let request = [];
+
+                //преобразование объекта в массив
+                for (let key in parsedInfo) {
+                    request.push(key + " = '" + parsedInfo[key] + "'");
+                }
+
+                //объединение в строку
+                request = request.join(", ");
+
+                //отправляем запрос в БД
+                try {
+                    await db.query(
+                        `UPDATE Auth SET ${request} WHERE login = '${userDecoded.login}';`
+                    );
+                    console.log("Success!".green);
+                    res.status(200).json(newTokens); //всё хорошо
+                    return;
+                } catch (err) {
+                    console.log("Failure!".red);
+                    console.log(
+                        "Warning! Database is not avaliable!".bgYellow.bold
+                            .black
+                    );
+                    res.status(500).json(); //проблема с подключением к БД
+                    return;
+                }
+            }
+            //если неправильный пароль
+            else {
+                console.log("Failure!".red);
+                res.status(401).json(); //неправильный пароль
+                return;
+            }
+        } catch (err) {
+            console.log("Failure!".red);
+            res.status(401).json(); //токен недействителен
+            return;
+        }
+    }
 
     async deleteUser(req, res) {
         //защита от вылета
@@ -607,7 +674,7 @@ export class UserController {
             } catch (err) {
                 console.log("Failure!".red);
                 console.log(
-                    "Warning!  Database is not avaliable!".bgYellow.bold.black
+                    "Warning! Database is not avaliable!".bgYellow.bold.black
                 );
                 res.status(500).json(); //проблема с подключением к БД
                 return;

@@ -22,6 +22,30 @@ export function getCurrTime() {
     return res;
 }
 
+export function getUTCCurrTime() {
+    let res = "";
+    let data = new Date();
+    let hh = data.getUTCHours();
+    let mm = data.getUTCMinutes();
+    let ss = data.getUTCSeconds();
+
+    if (hh < 10) {
+        res += "0";
+    }
+    res += hh + ":";
+
+    if (mm < 10) {
+        res += "0";
+    }
+    res += mm + ":";
+
+    if (ss < 10) {
+        res += "0";
+    }
+    res += ss;
+    return res;
+}
+
 export function getCurrDateTime() {
     let data = new Date();
     return (
@@ -31,10 +55,19 @@ export function getCurrDateTime() {
         "-" +
         data.getDate() +
         " " +
-        data.getHours() +
-        ":" +
-        data.getMinutes() +
-        ":" +
-        data.getSeconds()
+        getCurrTime()
+    );
+}
+
+export function getCurrDateTimeUTC() {
+    let data = new Date();
+    return (
+        data.getUTCFullYear() +
+        "-" +
+        (data.getUTCMonth()) +
+        "-" +
+        data.getUTCDate() +
+        " " +
+        getUTCCurrTime()
     );
 }
