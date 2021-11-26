@@ -1,6 +1,6 @@
 {
-  "name": "postgresql-express",
-  "version": "4.*",
+  "name": "express-api",
+  "version": "5.*",
   "description": "API for Alexey Ivashkin and Ivan Kubyshev",
   "main": "index.js",
   "scripts": {

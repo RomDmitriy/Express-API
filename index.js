@@ -1,7 +1,7 @@
 import app from "./app.js";
 import { getCurrTime } from "./times.js";
 
-console.log("API v5.0");
+console.log("API v5.0.1");
 
 app.listen(5000, () =>
     console.log(
