@@ -424,6 +424,7 @@ export class UserController {
             } else {
                 console.log("Failure!".red);
                 res.status(404).json(); //пользователь с таким токеном не существует
+                return;
             }
             //если токен недействителен
         } catch (err) {
@@ -475,6 +476,7 @@ export class UserController {
                     bcrypt.genSaltSync(10)
                 );
 
+                //обновляем пароль в БД
                 try {
                     await db.query(
                         `UPDATE Auth SET password = '${secPass}' WHERE login = '${req.body.login}'`

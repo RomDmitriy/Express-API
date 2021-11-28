@@ -1,4 +1,4 @@
-# API Documentation (v5.1)
+# API Documentation (v5.1.2)
 
 ## Auth queries
 
@@ -6,7 +6,7 @@
 `http://localhost:5000/api/user/register`<br>
 (minimum: login - 4 letters, password - 6 letters)<br>
 (maximum: login - 32 letters, password - 32 letters)<br>
-(login _must_ be unique)<br>
+(login **must** be unique)<br>
 ```
 POST:
 {
@@ -14,11 +14,12 @@ POST:
     "password": "testtest"
 }
 ```
-> If (201 status) then returns access_token (expires in 30 minutes) and refresh_token (expires after any refresh tokens).<br>
-> If (400 status) then login or password is null, or wrong length.<br>
-> If (409 status) then user already exists.<br>
-> If (429 status) then user tries register too many accounts.<br>
-> If (500 status) then database is not available.<br>
+> 201 status: Returns access_token (expires in 30 minutes) and refresh_token (expires after any refresh tokens).<br>
+
+> 400 status: This login or password has wrong length.<br>
+> 409 status: This user already exists.<br>
+> 429 status: User tries register too many accounts.<br>
+> 500 status: Database is not available.<br>
 
 > Updates login, nickname, password, last_time_utc and register_time_utc in database.<br>
 
@@ -31,11 +32,12 @@ POST:
     "password": "testtest"
 }
 ```
-> If (200 status) then returns access_token (expires in 30 minutes) and refresh_token (expires after any refresh tokens).<br>
-> If (400 status) then bad request.<br>
-> If (401 status) then wrong password.<br>
-> If (404 status) then user not found.<br>
-> If (500 status) then database is not available.<br>
+> 200 status: Returns access_token (expires in 30 minutes) and refresh_token (expires after any refresh tokens).<br>
+
+> 400 status: Bad request.<br>
+> 401 status: Wrong password.<br>
+> 404 status: User not found.<br>
+> 500 status: Database is not available.<br>
 
 > Updates last_time_utc and refresh_token in database.<br>
 
@@ -47,11 +49,12 @@ POST:
     "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRlc3R0dCIsInBhc3N3b3JkIjoiJDJhJDEwJDV4bzRibDM4czczSmJIQmFlUmw1UC5lc0k0MXNUMC42LnBaUlhmZi5YekFBUXJDZ1RSNG5tIiwiaWF0IjoxNjM3NzQ0MjQ3LCJleHAiOjE2Mzc3NDYwNDd9.oLDKwnjSwZy1sR3EHVypsGgYXrT6k_Cq4VCr9n-VaII"
 }
 ```
-> If (200 status) then user found.<br>
-> If (400 status) then bad request.<br>
-> If (401 status) then access_token has expired or bad access_token.<br>
-> If (404 status) then user with this token not found.<br>
-> If (500 status) then database is not available.<br>
+> 200 status: User found.<br>
+
+> 400 status: Bad request.<br>
+> 401 status: This access_token has expired or bad access_token.<br>
+> 404 status: No one user with this token not found.<br>
+> 500 status: Database is not available.<br>
 
 > Updates last_time_utc in database.<br>
 
@@ -63,10 +66,11 @@ POST:
     "refresh_token": "3VpMzWC4KZU29yPZzwgQmbvDQMiJJY9s5"
 }
 ```
-> If (200 status) then returns access_token (expires in 30 minutes) and refresh_token (expires after any refresh tokens).<br>
-> If (400 status) then refresh_token is null.<br>
-> If (404 status) then user with this refresh_token not found.<br>
-> If (500 status) then database is not available.<br>
+> 200 status: Returns access_token (expires in 30 minutes) and refresh_token (expires after any refresh tokens).<br>
+
+> 400 status: This refresh_token is null.<br>
+> 404 status: User with this refresh_token not found.<br>
+> 500 status: Database is not available.<br>
 
 > Updates last_login_utc and refresh_token in database.<br>
 
@@ -79,10 +83,11 @@ POST
     "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRlc3RfdG9rZW4iLCJwYXNzd29yZCI6IiQyYSQxMCRsdG84SDVaUnBRWXZTQUZQbDMyTFB1QnFsdHJEL2tpZ3h1azYwMXpBbmpJUmNjUHp4eUI0VyIsImlhdCI6MTYzNzUwNzIxNCwiZXhwIjoxNjM3NTA5MDE0fQ.gaF2jkTmBt-EzE1vUmUVbWNHrywPejGSWEI1mF-I5Q4"
 }
 ```
-> If (200 status) then returns username, about, avatar_url, last_login_utc and register_time_utc.<br>
-> If (401 status) then access_token has expired or bad access_token.<br>
-> If (404 status) then user with this access_token not found.<br>
-> If (500 status) then database is not available.<br>
+> 200 status: Returns username, about, avatar_url, last_login_utc and register_time_utc.<br>
+
+> 401 status: This access_token has expired or bad access_token.<br>
+> 404 status: No one user with this token not found.<br>
+> 500 status: Database is not available.<br>
 
 ### Change user information
 (nickname, password, about, avatar_url, question_id, question_answer can be changed)<br>
@@ -99,11 +104,12 @@ POST
     "question_answer": "Illya"
 }
 ```
-> If (200 status) then returns new tokens (only if you changed user password) or nothing.<br>
-> If (401 status) then access_token has expired or bad access_token.<br>
-> If (404 status) then user with this access_token not found.<br>
-> If (429 status) then user changes data too often (restriction on changing data once a minute).<br>
-> If (500 status) then database is not available.<br>
+> 200 status: Returns new tokens (only if you changed user password) or nothing.<br>
+
+> 401 status: This access_token has expired or bad access_token.<br>
+> 404 status: No one user with this token not found.<br>
+> 429 status: User tries changes data too often (restriction on changing data once a minute).<br>
+> 500 status: Database is not available.<br>
 
 ### Reset password
 `http://localhost:5000/api/user/resetPassword/`<br>
@@ -114,9 +120,10 @@ POST
     "new_password": "New Password"
 }
 ```
-> If (200 status) then password successfully changed.<br>
-> If (404 status) then user with this login not found.<br>
-> If (500 status) then database is not available.<br>
+> 200 status: User password successfully changed.<br>
+
+> 404 status: No one user with this token not found.<br>
+> 500 status: Database is not available.<br>
 
 > Past access token will not be working, you must request new access token
 
@@ -128,7 +135,8 @@ DELETE
     "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRlc3RfdG9rZW4iLCJwYXNzd29yZCI6IiQyYSQxMCRsdG84SDVaUnBRWXZTQUZQbDMyTFB1QnFsdHJEL2tpZ3h1azYwMXpBbmpJUmNjUHp4eUI0VyIsImlhdCI6MTYzNzUwNzIxNCwiZXhwIjoxNjM3NTA5MDE0fQ.gaF2jkTmBt-EzE1vUmUVbWNHrywPejGSWEI1mF-I5Q4"
 }
 ```
-> If (200 status) then user successfully deleted.<br>
-> If (401 status) then access_token has expired or bad access_token.<br>
-> If (404 status) then user with this access_token not found.<br>
-> If (500 status) then database is not available.<br>
+> 200 status: User successfully deleted.<br>
+
+> 401 status: This access_token has expired or bad access_token.<br>
+> 404 status: No one user with this token not found.<br>
+> 500 status: Database is not available.<br>
