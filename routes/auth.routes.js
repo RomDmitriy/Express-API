@@ -1,11 +1,12 @@
 import { Router } from "express";
 import { UserController } from "../controllers/auth.controller.js";
+import { limiterChangeData, limiterRegister } from "../shared/limits.js";
 
 const authRouter = Router();
 const userController = new UserController();
 
 //регистрация
-authRouter.post("/register", userController.createUser);
+authRouter.post("/register", limiterRegister, userController.createUser);
 
 //логин
 authRouter.post("/login", userController.userAuthorization);
@@ -17,7 +18,7 @@ authRouter.post("/loginToken", userController.userAuthorizationToken);
 authRouter.post("/update", userController.getNewJWTtokens);
 
 //изменить данные пользователя
-authRouter.post("/changeData", userController.changeUserInformation);
+authRouter.post("/changeData", limiterChangeData, userController.changeUserInformation);
 
 //получить данные пользователя
 authRouter.post("/fetch/", userController.getUserPublicInformation);

@@ -1,4 +1,4 @@
-# API Documentation (v5.0)
+# API Documentation (v5.1)
 
 ## Auth queries
 
@@ -17,6 +17,7 @@ POST:
 > If (201 status) then returns access_token (expires in 30 minutes) and refresh_token (expires after any refresh tokens).<br>
 > If (400 status) then login or password is null, or wrong length.<br>
 > If (409 status) then user already exists.<br>
+> If (429 status) then user tries register too many accounts.<br>
 > If (500 status) then database is not available.<br>
 
 > Updates login, nickname, password, last_time_utc and register_time_utc in database.<br>

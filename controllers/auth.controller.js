@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { jwt_key } from "../private-info.js";
 import faker from "faker";
-import { getCurrTime, getCurrDateTime, getCurrDateTimeUTC } from "../times.js";
+import { getCurrTime, getCurrDateTimeUTC } from "../shared/times.js";
 import "colors";
 
 export class UserController {
