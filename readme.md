@@ -102,6 +102,7 @@ POST
 > If (200 status) then returns new tokens (only if you changed user password) or nothing.<br>
 > If (401 status) then access_token has expired or bad access_token.<br>
 > If (404 status) then user with this access_token not found.<br>
+> If (429 status) then user changes data too often (restriction on changing data once a minute).<br>
 > If (500 status) then database is not available.<br>
 
 ### Reset password
