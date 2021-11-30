@@ -1,9 +1,9 @@
-import db from "../db.js";
+import db from "../../shared/db.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { jwt_key } from "../private-info.js";
+import { jwt_key } from "../../security_config.js";
 import faker from "faker";
-import { getCurrTime, getCurrDateTimeUTC } from "../shared/times.js";
+import { getCurrTime, getCurrDateTimeUTC } from "../../shared/times.js";
 import "colors";
 
 export class UserController {

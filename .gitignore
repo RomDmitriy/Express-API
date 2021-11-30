@@ -4,7 +4,7 @@
 /node_modules
 
 #private info
-private-info.js
+security_config.js
 
 #editor config
 .editorconfig

@@ -2,8 +2,8 @@ import { Router } from "express";
 import { ApartmentController } from "../controllers/apartment.controller.js";
 
 const apartmentRouter = Router();
-const apartsController = new ApartmentController();
+const apartamentController = new ApartmentController();
 
-apartmentRouter.post("/add", apartsController.addApartment);
+//apartmentRouter.post("/add", apartamentController.addApartment);
 
 export default apartmentRouter;

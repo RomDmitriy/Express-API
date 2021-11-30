@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { UserController } from "../controllers/auth.controller.js";
-import { limiterChangeData, limiterRegister } from "../shared/limits.js";
+import { limiterChangeData, limiterRegister } from "../../shared/limits.js";
 
 const authRouter = Router();
 const userController = new UserController();
