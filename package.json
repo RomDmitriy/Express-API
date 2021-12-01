@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "server": "node .",
-    "dev": "nodemon ."
+    "dev": "nodemon .",
+    "gen_cfg": "node ./shared/generate_security_config",
+    "full_update": "concurrently --kill-others \"git pull\" \"npm i\""
   },
   "author": "Alexey Ivashkin",
   "license": "ISC",

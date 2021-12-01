@@ -1,4 +1,4 @@
-import db from "../../shared/db.js";
+import db from "../../shared/database.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { jwt_key } from "../../security_config.js";

@@ -1,4 +1,4 @@
-import db from "../../shared/db.js";
+import db from "../../shared/database.js";
 
 export class ApartmentController {
     async addApartment(req, res) {
