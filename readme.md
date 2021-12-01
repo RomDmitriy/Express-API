@@ -136,9 +136,9 @@ DELETE
 > 404 status: No one user with this token not found.<br>
 > 500 status: Database is not available.<br>
 
-## How to install
+## How to install API
 
-1) Install Node.js
+1) Install [Node.js](https://nodejs.org/en/)
 
 ____
 2) Open where you want to place the API folder
@@ -149,6 +149,7 @@ ____
  git clone https://github.com/RomDmitriy/Express-API.git
  ```
    Or if you don't have git, you can download API from GitHub by clicking on 'Download ZIP'
+   ![image](https://user-images.githubusercontent.com/55810251/144215518-7a07d3bc-cf04-4de9-987d-ee7e9eadc0f7.png)
 
 ____
 4) Go to API folder. Open console and write
