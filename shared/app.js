@@ -3,9 +3,9 @@ import express from "express";
 import cors from "cors";
 
 //импорт роутов
-import apartmentRouter from "./api/routes/apartment.routes.js";
-import authRouter from "./api/routes/auth.routes.js";
-import itemRouter from "./api/routes/item.routes.js";
+import apartmentRouter from "../api/routes/apartment.routes.js";
+import authRouter from "../api/routes/auth.routes.js";
+import itemRouter from "../api/routes/item.routes.js";
 
 
 //инициализация express

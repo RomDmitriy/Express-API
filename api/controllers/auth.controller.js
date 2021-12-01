@@ -19,7 +19,7 @@ export class UserController {
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
                 " Creating new user with login = " +
-                login.bgGray.hidden
+                login
         );
 
         //валидация длин данных
@@ -71,7 +71,7 @@ export class UserController {
                     if (err.errno === -4078) {
                         console.log("Failure!".red);
                         console.log(
-                            "Warning! Database is not avaliable!".bgYellow.bold
+                            "Warning! Database is unavaliable!".bgYellow
                                 .black
                         );
                         res.status(500).json(); //проблема с подключением к БД
@@ -105,7 +105,7 @@ export class UserController {
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
                 " Auth user with login = " +
-                login.bgGray.hidden
+                login
         );
 
         //защита от пустых логина или пароля
@@ -120,7 +120,7 @@ export class UserController {
             } catch (err) {
                 console.log("Failure!".red);
                 console.log(
-                    "Warning! Database is not avaliable!".bgYellow.bold.black
+                    "Warning! Database is unavaliable!".bgYellow.black
                 );
                 res.status(500).json(); //проблема с подключением к БД
                 return;
@@ -173,7 +173,7 @@ export class UserController {
                         }
                         console.log("Failure!".red);
                         console.log(
-                            "Warning! Database is not avaliable!".bgYellow.bold
+                            "Warning! Database is unavaliable!".bgYellow
                                 .black
                         );
                         res.status(500).json(); //проблема с подключением к БД
@@ -211,7 +211,7 @@ export class UserController {
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
                 " Auth user with access token = " +
-                access_token.bgGray.hidden
+                access_token
         );
 
         //защита от пустого токена
@@ -230,7 +230,7 @@ export class UserController {
                 } catch (err) {
                     console.log("Failure!".red);
                     console.log(
-                        "Warning! Database is not avaliable!".bgYellow.bold
+                        "Warning! Database is unavaliable!".bgYellow
                             .black
                     );
                     res.status(500).json(); //проблема с подключением к БД
@@ -257,7 +257,7 @@ export class UserController {
                         } catch (err) {
                             console.log("Failure!".red);
                             console.log(
-                                "Warning! Database is not avaliable!".bgYellow
+                                "Warning! Database is unavaliable!".bgYellow
                                     .bold.black
                             );
                             res.status(500).json(); //проблема с подключением к БД
@@ -300,7 +300,7 @@ export class UserController {
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
                 "Update token for user with refresh token = " +
-                req.body.refresh_token.bgGray.hidden
+                req.body.refresh_token
         );
 
         //защита от плохого запроса
@@ -320,7 +320,7 @@ export class UserController {
         } catch (err) {
             console.log("Failure!".red);
             console.log(
-                "Warning! Database is not avaliable!".bgYellow.bold.black
+                "Warning! Database is unavaliable!".bgYellow.black
             );
             res.status(500).json(); //проблема с подключением к БД
             return;
@@ -368,7 +368,7 @@ export class UserController {
                 }
                 console.log("Failure!".red);
                 console.log(
-                    "Warning! Database is not avaliable!".bgYellow.bold.black
+                    "Warning! Database is unavaliable!".bgYellow.black
                 );
                 res.status(500).json(); //проблема с подключением к БД
                 return;
@@ -392,7 +392,7 @@ export class UserController {
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
                 "Get user with access token = " +
-                req.body.access_token.bgGray.hidden
+                req.body.access_token
         );
 
         //проверяем access_token на валидность
@@ -410,7 +410,7 @@ export class UserController {
             } catch (err) {
                 console.log("Failure!".red);
                 console.log(
-                    "Warning! Database is not avaliable!".bgYellow.bold.black
+                    "Warning! Database is unavaliable!".bgYellow.black
                 );
                 res.status(500).json(); //проблема с подключением к БД
                 return;
@@ -446,7 +446,7 @@ export class UserController {
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
                 "Refresh password of user with login = " +
-                login.bgGray.hidden
+                login
         );
 
         //защита от плохого запроса
@@ -462,7 +462,7 @@ export class UserController {
             } catch (err) {
                 console.log("Failure!".red);
                 console.log(
-                    "Warning! Database is not avaliable!".bgYellow.bold.black
+                    "Warning! Database is unavaliable!".bgYellow.black
                 );
                 res.status(500).json(); //проблема с подключением к БД
                 return;
@@ -486,7 +486,7 @@ export class UserController {
                 } catch (err) {
                     console.log("Failure!".red);
                     console.log(
-                        "Warning! Database is not avaliable!".bgYellow.bold
+                        "Warning! Database is unavaliable!".bgYellow
                             .black
                     );
                     res.status(500).json(); //проблема с подключением к БД
@@ -515,7 +515,7 @@ export class UserController {
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
                 "Get user with access token = " +
-                req.body.access_token.bgGray.hidden
+                req.body.access_token
         );
 
         //проверяем access_token на валидность
@@ -531,7 +531,7 @@ export class UserController {
             } catch (err) {
                 console.log("Failure!".red);
                 console.log(
-                    "Warning! Database is not avaliable!".bgYellow.bold.black
+                    "Warning! Database is unavaliable!".bgYellow.black
                 );
                 res.status(500).json(); //проблема с подключением к БД
                 return;
@@ -617,7 +617,7 @@ export class UserController {
                 } catch (err) {
                     console.log("Failure!".red);
                     console.log(
-                        "Warning! Database is not avaliable!".bgYellow.bold
+                        "Warning! Database is unavaliable!".bgYellow
                             .black
                     );
                     res.status(500).json(); //проблема с подключением к БД
@@ -648,7 +648,7 @@ export class UserController {
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
                 "Get user with access token = " +
-                req.body.access_token.bgGray.hidden
+                req.body.access_token
         );
 
         //проверяем access_token на валидность
@@ -676,7 +676,7 @@ export class UserController {
             } catch (err) {
                 console.log("Failure!".red);
                 console.log(
-                    "Warning! Database is not avaliable!".bgYellow.bold.black
+                    "Warning! Database is unavaliable!".bgYellow.black
                 );
                 res.status(500).json(); //проблема с подключением к БД
                 return;
