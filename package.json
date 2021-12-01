@@ -7,7 +7,7 @@
     "server": "node .",
     "dev": "nodemon .",
     "gen_cfg": "node ./shared/generate_security_config",
-    "full_update": "concurrently --kill-others \"git pull\" \"npm i\""
+    "full_update": "git pull && npm i"
   },
   "author": "Alexey Ivashkin",
   "license": "ISC",
