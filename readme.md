@@ -1,4 +1,4 @@
-# API Documentation (v5.1.2)
+# API Documentation
 
 ## Auth queries
 
@@ -15,13 +15,12 @@ POST:
 }
 ```
 > 201 status: Returns access_token (expires in 30 minutes) and refresh_token (expires after any refresh tokens).<br>
+> Updates login, nickname, password, last_time_utc and register_time_utc in database.<br>
 
 > 400 status: This login or password has wrong length.<br>
 > 409 status: This user already exists.<br>
 > 429 status: User tries register too many accounts.<br>
 > 500 status: Database is not available.<br>
-
-> Updates login, nickname, password, last_time_utc and register_time_utc in database.<br>
 
 ### Login user
 `http://localhost:5000/api/user/login`<br>
@@ -33,13 +32,12 @@ POST:
 }
 ```
 > 200 status: Returns access_token (expires in 30 minutes) and refresh_token (expires after any refresh tokens).<br>
+> Updates last_time_utc and refresh_token in database.<br>
 
 > 400 status: Bad request.<br>
 > 401 status: Wrong password.<br>
 > 404 status: User not found.<br>
 > 500 status: Database is not available.<br>
-
-> Updates last_time_utc and refresh_token in database.<br>
 
 ### Login user via access token
 `http://localhost:5000/api/user/loginToken`<br>
@@ -50,13 +48,12 @@ POST:
 }
 ```
 > 200 status: User found.<br>
+> Updates last_time_utc in database.<br>
 
 > 400 status: Bad request.<br>
 > 401 status: This access_token has expired or bad access_token.<br>
 > 404 status: No one user with this token not found.<br>
 > 500 status: Database is not available.<br>
-
-> Updates last_time_utc in database.<br>
 
 ### Get new tokens
 `http://localhost:5000/api/user/check`<br>
@@ -67,12 +64,11 @@ POST:
 }
 ```
 > 200 status: Returns access_token (expires in 30 minutes) and refresh_token (expires after any refresh tokens).<br>
+> Updates last_login_utc and refresh_token in database.<br>
 
 > 400 status: This refresh_token is null.<br>
 > 404 status: User with this refresh_token not found.<br>
 > 500 status: Database is not available.<br>
-
-> Updates last_login_utc and refresh_token in database.<br>
 
 ### Get all public information about user
 (without id, login, password and refresh_token)<br>
@@ -121,11 +117,10 @@ POST
 }
 ```
 > 200 status: User password successfully changed.<br>
+> Past access token will not be working, you must request new access token.<br>
 
 > 404 status: No one user with this token not found.<br>
 > 500 status: Database is not available.<br>
-
-> Past access token will not be working, you must request new access token
 
 ### Delete user
 `http://localhost:5000/api/user/delete/`<br>
