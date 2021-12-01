@@ -1,5 +1,49 @@
 # API Documentation
 
+## How to install API
+
+1) Install [Node.js](https://nodejs.org/en/)
+
+____
+2) Open where you want to place the API folder
+
+____
+3) In this folder open a console and write
+ ```
+ git clone https://github.com/RomDmitriy/Express-API.git
+ ```
+   Or if you don't have git, you can download API from GitHub by clicking on 'Download ZIP'
+   ![image](https://user-images.githubusercontent.com/55810251/144215518-7a07d3bc-cf04-4de9-987d-ee7e9eadc0f7.png)
+
+____
+4) Go to API folder. Open console and write
+ ```
+ npm i
+ ```
+
+   (this will install the required packages to your folder, the process may take a few minutes)
+
+____
+5) Write in console
+ ```
+ npm run gen_cfg
+ ```
+
+   The security_config.js file will appear in the API folder, you need to fill it with your data, otherwise the API will not work!
+
+____
+6) Finally, you can run API by using
+ ```
+ npm run server
+ ```
+
+
+____
+If you have git, you can also update your API version. Just type into the console
+```
+npm run full_update
+```
+
 ## Auth queries
 
 ### Register new user
@@ -135,47 +179,3 @@ DELETE
 > 401 status: This access_token has expired or bad access_token.<br>
 > 404 status: No one user with this token not found.<br>
 > 500 status: Database is not available.<br>
-
-## How to install API
-
-1) Install [Node.js](https://nodejs.org/en/)
-
-____
-2) Open where you want to place the API folder
-
-____
-3) In this folder open a console and write
- ```
- git clone https://github.com/RomDmitriy/Express-API.git
- ```
-   Or if you don't have git, you can download API from GitHub by clicking on 'Download ZIP'
-   ![image](https://user-images.githubusercontent.com/55810251/144215518-7a07d3bc-cf04-4de9-987d-ee7e9eadc0f7.png)
-
-____
-4) Go to API folder. Open console and write
- ```
- npm i
- ```
-
-   (this will install the required packages to your folder, the process may take a few minutes)
-
-____
-5) Write in console
- ```
- npm run gen_cfg
- ```
-
-   The security_config.js file will appear in the API folder, you need to fill it with your data, otherwise the API will not work!
-
-____
-6) Finally, you can run API by using
- ```
- npm run server
- ```
-
-
-____
-If you have git, you can also update your API version. Just type into the console
-```
-npm run full_update
-```
