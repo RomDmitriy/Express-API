@@ -49,7 +49,7 @@ export class UserController {
             while (true) {
                 try {
                     await db.query(
-                        `INSERT INTO Auth (login, nickname, password, last_login_utc, refreshtoken, register_time_utc) VALUES (
+                        `INSERT INTO Auth (login, nickname, password, last_login_utc, refresh_token, register_time_utc) VALUES (
                             '${req.body.login}', '${
                             req.body.login
                         }', '${secPass}', '${getCurrDateTimeUTC()}', '${
@@ -60,7 +60,7 @@ export class UserController {
                     //обработка когда refresh_token уже занят
                     if (
                         err.detail !== undefined &&
-                        err.detail.includes("refreshtoken")
+                        err.detail.includes("refresh_token")
                     ) {
                         console.log("Refresh token already exists :)".yellow);
                         tokens.refresh_token = faker.finance.bitcoinAddress();
@@ -69,7 +69,7 @@ export class UserController {
 
                     //если БД легла
                     if (err.errno === -4078) {
-                        console.log("Failure!".red);
+                        console.log("Failure! Status code: 500".red);
                         console.log(
                             "Warning! Database is unavaliable!".bgYellow
                                 .black
@@ -77,18 +77,18 @@ export class UserController {
                         res.status(500).json(); //проблема с подключением к БД
                         return;
                     }
-                    console.log("Failure!".red);
+                    console.log("Failure! Status code: 409 (User already exists)".red);
                     res.status(409).json(); //пользователь уже существует
                     return;
                 }
 
                 //возвращаем токены и сообщение об успехе
-                console.log("Success!".green);
+                console.log("Success! Status code: 201".green);
                 res.status(201).json(tokens); //всё хорошо
                 return;
             }
         } else {
-            console.log("Failure!".red);
+            console.log("Failure! Status code: 400 (Bad request)".red);
             res.status(400).json(); //плохой запрос (пустые поля или неправильная длина)
         }
     }
@@ -118,7 +118,7 @@ export class UserController {
                     `SELECT password FROM Auth WHERE login = '${req.body.login}';`
                 );
             } catch (err) {
-                console.log("Failure!".red);
+                console.log("Failure! Status code: 500".red);
                 console.log(
                     "Warning! Database is unavaliable!".bgYellow.black
                 );
@@ -128,7 +128,7 @@ export class UserController {
 
             //если пользователь не найден
             if (!user.rowCount) {
-                console.log("Failure!".red);
+                console.log("Failure! Status code: 404 (User not found)".red);
                 res.status(404).json(); //пользователь не найден
                 return;
             }
@@ -152,17 +152,17 @@ export class UserController {
                 while (true) {
                     try {
                         await db.query(
-                            `UPDATE Auth SET refreshtoken = '${
+                            `UPDATE Auth SET refresh_token = '${
                                 newTokens.refresh_token
                             }', last_login_utc = '${getCurrDateTimeUTC()}' WHERE login = '${
                                 req.body.login
-                            }'`
+                            }';`
                         );
                     } catch (err) {
                         //обработка когда refresh_token уже занят
                         if (
                             err.detail !== undefined &&
-                            err.detail.includes("refreshtoken")
+                            err.detail.includes("refresh_token")
                         ) {
                             console.log(
                                 "Refresh token already exists :)".yellow
@@ -171,7 +171,7 @@ export class UserController {
                                 faker.finance.bitcoinAddress();
                             continue;
                         }
-                        console.log("Failure!".red);
+                        console.log("Failure! Status code: 500".red);
                         console.log(
                             "Warning! Database is unavaliable!".bgYellow
                                 .black
@@ -181,20 +181,20 @@ export class UserController {
                     }
 
                     //выводим сообщение об успехе и возвращаем новые токены
-                    console.log("Success!".green);
+                    console.log("Success! Status code: 200".green);
                     res.status(200).json(newTokens); //всё хорошо
                     return;
                 }
             }
             //если неправильный пароль
             else {
-                console.log("Failure!".red);
+                console.log("Failure! Status code: 401 (Wrong password)".red);
                 res.status(401).json(); //неправильный пароль
             }
         }
         //если неправильный запрос
         else {
-            console.log("Failure!".red);
+            console.log("Failure! Status code: 400 (Token expired)".red);
             res.status(400).json(); //неправильный запрос
         }
     }
@@ -228,7 +228,7 @@ export class UserController {
                         `SELECT password FROM Auth WHERE login = '${userDecoded.login}';`
                     );
                 } catch (err) {
-                    console.log("Failure!".red);
+                    console.log("Failure! Status code: 500".red);
                     console.log(
                         "Warning! Database is unavaliable!".bgYellow
                             .black
@@ -239,7 +239,7 @@ export class UserController {
 
                 //если пользователь не найден
                 if (!userPassword.rowCount) {
-                    console.log("Failure!".red);
+                    console.log("Failure! Status code: 404 (User not found)".red);
                     res.status(404).json(); //пользователь не найден
                     return;
                 }
@@ -255,7 +255,7 @@ export class UserController {
                                 }'`
                             );
                         } catch (err) {
-                            console.log("Failure!".red);
+                            console.log("Failure! Status code: 500".red);
                             console.log(
                                 "Warning! Database is unavaliable!".bgYellow
                                     .bold.black
@@ -265,26 +265,26 @@ export class UserController {
                         }
 
                         //выводим сообщение об успехе
-                        console.log("Success!".green);
+                        console.log("Success! Status code: 200".green);
                         res.status(200).json(); //всё хорошо
                         return;
                     }
                 }
                 //если неправильный пароль
                 else {
-                    console.log("Failure!".red);
+                    console.log("Failure! Status code: 401 (Wrong password)".red);
                     res.status(401).json(); //неправильный пароль
                 }
             } catch (err) {
                 //если токен недействителен
-                console.log("Failure!".red);
+                console.log("Failure! Status code: 401 (Token expired)".red);
                 res.status(401).json(); //токен недействителен
                 return;
             }
         }
         //если неправильный запрос
         else {
-            console.log("Failure!".red);
+            console.log("Failure! Status code: 401 (Wrong request)".red);
             res.status(400).json(); //неправильный запрос
         }
     }
@@ -305,7 +305,7 @@ export class UserController {
 
         //защита от плохого запроса
         if (req.body.refresh_token === null) {
-            console.log("Failure!".red);
+            console.log("Failure! Status code: 400 (Bad request)".red);
             res.status(400).json(); //плохой запрос
             return;
         }
@@ -315,10 +315,10 @@ export class UserController {
         //ищем нужного пользователя
         try {
             user = await db.query(
-                `SELECT login, password FROM Auth WHERE refreshtoken = '${req.body.refresh_token}'`
+                `SELECT login, password FROM Auth WHERE refresh_token = '${req.body.refresh_token}'`
             );
         } catch (err) {
-            console.log("Failure!".red);
+            console.log("Failure! Status code: 500".red);
             console.log(
                 "Warning! Database is unavaliable!".bgYellow.black
             );
@@ -328,7 +328,7 @@ export class UserController {
 
         //если пользователя с таким токеном нет
         if (!user.rowCount) {
-            console.log("Failure!".red);
+            console.log("Failure! Status code: 500 (User not found)".red);
             res.status(404).json(); //пользователь не найден
             return;
         }
@@ -350,9 +350,9 @@ export class UserController {
         while (true) {
             try {
                 await db.query(
-                    `UPDATE Auth SET refreshtoken = '${
+                    `UPDATE Auth SET refresh_token = '${
                         newTokens.refresh_token
-                    }', last_login_utc = '${getCurrDateTimeUTC()}' WHERE refreshtoken = '${
+                    }', last_login_utc = '${getCurrDateTimeUTC()}' WHERE refresh_token = '${
                         req.body.refresh_token
                     }'`
                 );
@@ -360,13 +360,13 @@ export class UserController {
                 //обработка когда refresh_token уже занят
                 if (
                     err.detail !== undefined &&
-                    err.detail.includes("refreshtoken")
+                    err.detail.includes("refresh_token")
                 ) {
                     console.log("Refresh token already exists :)".yellow);
                     tokens.refresh_token = faker.finance.bitcoinAddress();
                     continue;
                 }
-                console.log("Failure!".red);
+                console.log("Failure! Status code: 500".red);
                 console.log(
                     "Warning! Database is unavaliable!".bgYellow.black
                 );
@@ -375,7 +375,7 @@ export class UserController {
             }
 
             //выводим сообщение об успехе и возвращаем новые токены
-            console.log("Success!".green);
+            console.log("Success! Status code: 200".green);
             res.status(200).json(newTokens); //всё хорошо
             return;
         }
@@ -408,7 +408,7 @@ export class UserController {
                     `SELECT nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc, to_char(register_time_utc, 'DD.MM.YYYY HH24:MI:SS') as register_time_utc FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
                 );
             } catch (err) {
-                console.log("Failure!".red);
+                console.log("Failure! Status code: 500".red);
                 console.log(
                     "Warning! Database is unavaliable!".bgYellow.black
                 );
@@ -418,17 +418,17 @@ export class UserController {
 
             //проверка на нахождение пользователя в БД
             if (user.rowCount) {
-                console.log("Success!".green);
+                console.log("Success! Status code: 200".green);
                 res.status(200).json(user.rows[0]); //всё хорошо
                 return;
             } else {
-                console.log("Failure!".red);
+                console.log("Failure! Status code: 404 (User already exists)".red);
                 res.status(404).json(); //пользователь с таким токеном не существует
                 return;
             }
             //если токен недействителен
         } catch (err) {
-            console.log("Failure!".red);
+            console.log("Failure! Status code: 401 (Token expired)".red);
             res.status(401).json(); //токен недействителен
             return;
         }
@@ -460,7 +460,7 @@ export class UserController {
                     `Select login FROM Auth WHERE login = '${req.body.login}'`
                 );
             } catch (err) {
-                console.log("Failure!".red);
+                console.log("Failure! Status code: 500".red);
                 console.log(
                     "Warning! Database is unavaliable!".bgYellow.black
                 );
@@ -481,10 +481,10 @@ export class UserController {
                     await db.query(
                         `UPDATE Auth SET password = '${secPass}' WHERE login = '${req.body.login}'`
                     );
-                    console.log("Success!".green);
+                    console.log("Success! Status code: 200".green);
                     res.status(200).json();
                 } catch (err) {
-                    console.log("Failure!".red);
+                    console.log("Failure! Status code: 500".red);
                     console.log(
                         "Warning! Database is unavaliable!".bgYellow
                             .black
@@ -495,11 +495,11 @@ export class UserController {
             }
             //если такого пользователя нет
             else {
-                console.log("Failure!".red);
+                console.log("Failure! Status code: 404 (User not found)".red);
                 res.status(404).json(); //пользователь с таким логином не найден
             }
         } else {
-            console.log("Failure!".red);
+            console.log("Failure! Status code: 400 (Bad request)".red);
             res.status(400).json(); //плохой запрос
         }
     }
@@ -529,7 +529,7 @@ export class UserController {
                     `SELECT password FROM Auth WHERE login = '${userDecoded.login}'`
                 );
             } catch (err) {
-                console.log("Failure!".red);
+                console.log("Failure! Status code: 500".red);
                 console.log(
                     "Warning! Database is unavaliable!".bgYellow.black
                 );
@@ -539,7 +539,7 @@ export class UserController {
 
             //если пользователь не найден
             if (!userPassword.rowCount) {
-                console.log("Failure!".red);
+                console.log("Failure! Status code: 404 (User not found)".red);
                 res.status(404).json(); //пользователь не найден
                 return;
             }
@@ -611,11 +611,11 @@ export class UserController {
                     await db.query(
                         `UPDATE Auth SET ${request} WHERE login = '${userDecoded.login}';`
                     );
-                    console.log("Success!".green);
+                    console.log("Success! Status code: 200".green);
                     res.status(200).json(newTokens); //всё хорошо
                     return;
                 } catch (err) {
-                    console.log("Failure!".red);
+                    console.log("Failure! Status code: 500".red);
                     console.log(
                         "Warning! Database is unavaliable!".bgYellow
                             .black
@@ -626,12 +626,12 @@ export class UserController {
             }
             //если неправильный пароль
             else {
-                console.log("Failure!".red);
+                console.log("Failure! Status code: 401 (Wrong password)".red);
                 res.status(401).json(); //неправильный пароль
                 return;
             }
         } catch (err) {
-            console.log("Failure!".red);
+            console.log("Failure! Status code: 401 (Token expired)".red);
             res.status(401).json(); //токен недействителен
             return;
         }
@@ -664,17 +664,17 @@ export class UserController {
 
                 //если пользователь был найден и удалён
                 if (query.rowCount > 0) {
-                    console.log("Success!".green);
+                    console.log("Success! Status code: 200".green);
                     res.status(200).json(); //всё хорошо
                     return;
                     //если пользователь не найден
                 } else {
-                    console.log("Failure!".red);
+                    console.log("Failure! Status code: 404 (User not found)".red);
                     res.status(404).json(); //пользователь с таким токеном не найден
                     return;
                 }
             } catch (err) {
-                console.log("Failure!".red);
+                console.log("Failure! Status code: 500".red);
                 console.log(
                     "Warning! Database is unavaliable!".bgYellow.black
                 );
@@ -682,7 +682,7 @@ export class UserController {
                 return;
             }
         } catch (err) {
-            console.log("Failure!".red);
+            console.log("Failure! Status code: 401 (Token expired)".red);
             res.status(401).json(); //токен недействителен
             return;
         }

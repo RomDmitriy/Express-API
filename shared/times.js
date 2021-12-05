@@ -51,7 +51,7 @@ export function getCurrDateTime() {
     return (
         data.getFullYear() +
         "-" +
-        (data.getMonth()) +
+        (data.getMonth() + 1) +
         "-" +
         data.getDate() +
         " " +
@@ -64,7 +64,7 @@ export function getCurrDateTimeUTC() {
     return (
         data.getUTCFullYear() +
         "-" +
-        (data.getUTCMonth()) +
+        (data.getUTCMonth() + 1) +
         "-" +
         data.getUTCDate() +
         " " +

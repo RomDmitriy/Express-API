@@ -8,6 +8,6 @@ export const limiterRegister = rateLimit({
 
 //ограничитель запросов на обновление информации о пользователе
 export const limiterChangeData = rateLimit({
-    windowMs: 1 * 60 * 1000, // 30 минут
+    windowMs: 1 * 60 * 1000, // 1 минута
     max: 1, // максимальное кол-во запросов с одного ip
 });

@@ -21,12 +21,12 @@ authRouter.post("/update", userController.getNewJWTtokens);
 authRouter.post("/changeData", limiterChangeData, userController.changeUserInformation);
 
 //получить данные пользователя
-authRouter.post("/fetch/", userController.getUserPublicInformation);
+authRouter.post("/fetch", userController.getUserPublicInformation);
 
 //сбросить пароль
-authRouter.put("/resetPassword/", userController.resetPassword);
+authRouter.put("/resetPassword", userController.resetPassword);
 
 //удалить пользователя
-authRouter.delete("/deleteUser/", userController.deleteUser);
+authRouter.delete("/deleteUser", userController.deleteUser);
 
 export default authRouter;
