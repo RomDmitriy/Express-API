@@ -63,7 +63,7 @@ POST:
 
 > 400 status: Bad request (check field names or length of values).<br>
 > 409 status: This user already exists.<br>
-> 429 status: User tries register too many accounts.<br>
+> 429 status: User tries register too many accounts (restriction on changing data once a 10 minutes).<br>
 > 500 status: Database is not available.<br>
 
 ### Login user
