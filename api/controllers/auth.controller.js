@@ -201,7 +201,7 @@ export class UserController {
 
     async userAuthorizationToken(req, res) {
         //защита от вылета
-        let access_token = req.body.access_token;
+        let access_token = req.get("Authorization");
         if (access_token === undefined) {
             access_token = "undefined";
         }
@@ -215,10 +215,10 @@ export class UserController {
         );
 
         //защита от пустого токена
-        if (req.body.access_token != null) {
+        if (req.get("Authorization") != null) {
             try {
                 //если токен невалидный, то jwt.verify вызовет ошибку
-                let userDecoded = jwt.verify(req.body.access_token, jwt_key);
+                let userDecoded = jwt.verify(req.get("Authorization"), jwt_key);
 
                 let userPassword;
 
@@ -291,8 +291,8 @@ export class UserController {
 
     async getNewJWTtokens(req, res) {
         //защита от вылета
-        if (req.body.refresh_token === undefined) {
-            req.body.refresh_token = "undefined";
+        if (req.get("Authorization") === undefined) {
+            req.get("Authorization") = "undefined";
         }
 
         //логирование
@@ -300,11 +300,11 @@ export class UserController {
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
                 "Update token for user with refresh token = " +
-                req.body.refresh_token
+                req.get("Authorization")
         );
 
         //защита от плохого запроса
-        if (req.body.refresh_token === null) {
+        if (req.get("Authorization") === null) {
             console.log("Failure! Status code: 400 (Bad request)".red);
             res.status(400).json(); //плохой запрос
             return;
@@ -315,7 +315,7 @@ export class UserController {
         //ищем нужного пользователя
         try {
             user = await db.query(
-                `SELECT login, password FROM Auth WHERE refresh_token = '${req.body.refresh_token}'`
+                `SELECT login, password FROM Auth WHERE refresh_token = '${req.get("Authorization")}'`
             );
         } catch (err) {
             console.log("Failure! Status code: 500".red);
@@ -353,7 +353,7 @@ export class UserController {
                     `UPDATE Auth SET refresh_token = '${
                         newTokens.refresh_token
                     }', last_login_utc = '${getCurrDateTimeUTC()}' WHERE refresh_token = '${
-                        req.body.refresh_token
+                        req.get("Authorization")
                     }'`
                 );
             } catch (err) {
@@ -383,8 +383,8 @@ export class UserController {
 
     async getUserPublicInformation(req, res) {
         //защита от вылета
-        if (req.body.access_token === undefined) {
-            req.body.access_token = "undefined";
+        if (req.get("Authorization") === undefined) {
+            req.get("Authorization") = "undefined";
         }
 
         //логирование
@@ -392,13 +392,13 @@ export class UserController {
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
                 "Get user with access token = " +
-                req.body.access_token
+                req.get("Authorization")
         );
 
         //проверяем access_token на валидность
         try {
             //если токен невалидный, то jwt.verify вызовет ошибку
-            let userDecoded = jwt.verify(req.body.access_token, jwt_key);
+            let userDecoded = jwt.verify(req.get("Authorization"), jwt_key);
 
             let user;
 
@@ -506,8 +506,8 @@ export class UserController {
 
     async changeUserInformation(req, res) {
         //защита от вылета
-        if (req.body.access_token === undefined) {
-            req.body.access_token = "undefined";
+        if (req.get("Authorization") === undefined) {
+            req.get("Authorization") = "undefined";
         }
 
         //логирование
@@ -515,13 +515,13 @@ export class UserController {
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
                 "Get user with access token = " +
-                req.body.access_token
+                req.get("Authorization")
         );
 
         //проверяем access_token на валидность
         try {
             //если токен невалидный, то jwt.verify вызовет ошибку
-            const userDecoded = jwt.verify(req.body.access_token, jwt_key);
+            const userDecoded = jwt.verify(req.get("Authorization"), jwt_key);
 
             //ищем нужного пользователя
             try {
@@ -639,8 +639,8 @@ export class UserController {
 
     async deleteUser(req, res) {
         //защита от вылета
-        if (req.body.access_token === undefined) {
-            req.body.access_token = "undefined";
+        if (req.get("Authorization") === undefined) {
+            req.get("Authorization") = "undefined";
         }
 
         //логирование
@@ -648,13 +648,13 @@ export class UserController {
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
                 "Get user with access token = " +
-                req.body.access_token
+                req.get("Authorization")
         );
 
         //проверяем access_token на валидность
         try {
             //если токен невалидный, то jwt.verify вызовет ошибку
-            let userDecoded = jwt.verify(req.body.access_token, jwt_key);
+            let userDecoded = jwt.verify(req.get("Authorization"), jwt_key);
 
             //получаем публичные данные
             try {

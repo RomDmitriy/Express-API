@@ -86,9 +86,12 @@ POST:
 ### Login user via access token
 `http://localhost:5000/api/user/loginToken`<br>
 ```
+Headers:
+{
+    "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRlc3R0dCIsInBhc3N3b3JkIjoiJDJhJDEwJDV4bzRibDM4czczSmJIQmFlUmw1UC5lc0k0MXNUMC42LnBaUlhmZi5YekFBUXJDZ1RSNG5tIiwiaWF0IjoxNjM3NzQ0MjQ3LCJleHAiOjE2Mzc3NDYwNDd9.oLDKwnjSwZy1sR3EHVypsGgYXrT6k_Cq4VCr9n-VaII"
+}
 POST:
 {
-    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRlc3R0dCIsInBhc3N3b3JkIjoiJDJhJDEwJDV4bzRibDM4czczSmJIQmFlUmw1UC5lc0k0MXNUMC42LnBaUlhmZi5YekFBUXJDZ1RSNG5tIiwiaWF0IjoxNjM3NzQ0MjQ3LCJleHAiOjE2Mzc3NDYwNDd9.oLDKwnjSwZy1sR3EHVypsGgYXrT6k_Cq4VCr9n-VaII"
 }
 ```
 > 200 status: User found.<br>
@@ -102,9 +105,13 @@ POST:
 ### Get new tokens
 `http://localhost:5000/api/user/check`<br>
 ```
+Headers:
+{
+    "Authorization": "3VpMzWC4KZU29yPZzwgQmbvDQMiJJY9s5"
+}
+
 POST:
 {
-    "refresh_token": "3VpMzWC4KZU29yPZzwgQmbvDQMiJJY9s5"
 }
 ```
 > 200 status: Returns access_token (expires in 30 minutes) and refresh_token (expires after any refresh tokens).<br>
@@ -118,9 +125,12 @@ POST:
 (without id, login, password and refresh_token)<br>
 `http://localhost:5000/api/user/fetch/`<br>
 ```
+Headers:
+{
+    "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRlc3R0dCIsInBhc3N3b3JkIjoiJDJhJDEwJDV4bzRibDM4czczSmJIQmFlUmw1UC5lc0k0MXNUMC42LnBaUlhmZi5YekFBUXJDZ1RSNG5tIiwiaWF0IjoxNjM3NzQ0MjQ3LCJleHAiOjE2Mzc3NDYwNDd9.oLDKwnjSwZy1sR3EHVypsGgYXrT6k_Cq4VCr9n-VaII"
+}
 POST
 {
-    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRlc3RfdG9rZW4iLCJwYXNzd29yZCI6IiQyYSQxMCRsdG84SDVaUnBRWXZTQUZQbDMyTFB1QnFsdHJEL2tpZ3h1azYwMXpBbmpJUmNjUHp4eUI0VyIsImlhdCI6MTYzNzUwNzIxNCwiZXhwIjoxNjM3NTA5MDE0fQ.gaF2jkTmBt-EzE1vUmUVbWNHrywPejGSWEI1mF-I5Q4"
 }
 ```
 > 200 status: Returns username, about, avatar_url, last_login_utc and register_time_utc.<br>
@@ -133,9 +143,12 @@ POST
 (nickname, password, about, avatar_url, question_id, question_answer can be changed)<br>
 `http://localhost:5000/api/user/changeData/`<br>
 ```
+Headers:
+{
+    "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRlc3R0dCIsInBhc3N3b3JkIjoiJDJhJDEwJDV4bzRibDM4czczSmJIQmFlUmw1UC5lc0k0MXNUMC42LnBaUlhmZi5YekFBUXJDZ1RSNG5tIiwiaWF0IjoxNjM3NzQ0MjQ3LCJleHAiOjE2Mzc3NDYwNDd9.oLDKwnjSwZy1sR3EHVypsGgYXrT6k_Cq4VCr9n-VaII"
+}
 POST
 {
-    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRlc3QiLCJwYXNzd29yZCI6IiQyYSQxMCRubDNtQ1d5M0h4b3MveFphNTE5dmlPNi9NeWhjdXN2N2lwajR0ck9UVzhwY3F4T1dkeTc4cSIsImlhdCI6MTYzNzk0MDE3NiwiZXhwIjoxNjM3OTQxOTc2fQ.1ux9Heuasa2Xz5LaGnRDeylIMu8vbCmrKHN3EyjhSbY",
     "nickname": "new_nickname",
     "password": "new_pass",
     "about": "new about",
@@ -169,9 +182,12 @@ POST
 ### Delete user
 `http://localhost:5000/api/user/delete/`<br>
 ```
+Headers:
+{
+    "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRlc3R0dCIsInBhc3N3b3JkIjoiJDJhJDEwJDV4bzRibDM4czczSmJIQmFlUmw1UC5lc0k0MXNUMC42LnBaUlhmZi5YekFBUXJDZ1RSNG5tIiwiaWF0IjoxNjM3NzQ0MjQ3LCJleHAiOjE2Mzc3NDYwNDd9.oLDKwnjSwZy1sR3EHVypsGgYXrT6k_Cq4VCr9n-VaII"
+}
 DELETE
 {
-    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRlc3RfdG9rZW4iLCJwYXNzd29yZCI6IiQyYSQxMCRsdG84SDVaUnBRWXZTQUZQbDMyTFB1QnFsdHJEL2tpZ3h1azYwMXpBbmpJUmNjUHp4eUI0VyIsImlhdCI6MTYzNzUwNzIxNCwiZXhwIjoxNjM3NTA5MDE0fQ.gaF2jkTmBt-EzE1vUmUVbWNHrywPejGSWEI1mF-I5Q4"
 }
 ```
 > 200 status: User successfully deleted.<br>
