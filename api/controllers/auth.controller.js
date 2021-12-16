@@ -152,11 +152,8 @@ export class UserController {
                 while (true) {
                     try {
                         await db.query(
-                            `UPDATE Auth SET refresh_token = '${
-                                newTokens.refresh_token
-                            }', last_login_utc = '${getCurrDateTimeUTC()}' WHERE login = '${
-                                req.body.login
-                            }';`
+                            `UPDATE Auth SET refresh_token = '${newTokens.refresh_token}', 
+                            last_login_utc = '${getCurrDateTimeUTC()}' WHERE login = '${req.body.login}';`
                         );
                     } catch (err) {
                         //обработка когда refresh_token уже занят
@@ -250,9 +247,8 @@ export class UserController {
                     while (true) {
                         try {
                             await db.query(
-                                `UPDATE Auth SET last_login_utc = '${getCurrDateTimeUTC()}' WHERE login = '${
-                                    req.body.login
-                                }'`
+                                `UPDATE Auth SET last_login_utc = '${getCurrDateTimeUTC()}' 
+                                WHERE login = '${req.body.login}'`
                             );
                         } catch (err) {
                             console.log("Failure! Status code: 500".red);
@@ -350,11 +346,9 @@ export class UserController {
         while (true) {
             try {
                 await db.query(
-                    `UPDATE Auth SET refresh_token = '${
-                        newTokens.refresh_token
-                    }', last_login_utc = '${getCurrDateTimeUTC()}' WHERE refresh_token = '${
-                        req.get("Authorization")
-                    }'`
+                    `UPDATE Auth SET refresh_token = '${newTokens.refresh_token}', 
+                    last_login_utc = '${getCurrDateTimeUTC()}' 
+                    WHERE refresh_token = '${req.get("Authorization")}'`
                 );
             } catch (err) {
                 //обработка когда refresh_token уже занят
@@ -391,7 +385,7 @@ export class UserController {
         console.log();
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
-                "Get user with access token = " +
+                " Get user with access token = " +
                 req.get("Authorization")
         );
 
@@ -445,7 +439,7 @@ export class UserController {
         console.log();
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
-                "Refresh password of user with login = " +
+                " Refresh password of user with login = " +
                 login
         );
 
@@ -514,7 +508,7 @@ export class UserController {
         console.log();
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
-                "Get user with access token = " +
+                " Get user with access token = " +
                 req.get("Authorization")
         );
 
@@ -647,7 +641,7 @@ export class UserController {
         console.log();
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
-                "Get user with access token = " +
+                " Get user with access token = " +
                 req.get("Authorization")
         );
 
