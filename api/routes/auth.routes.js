@@ -9,19 +9,19 @@ const userController = new UserController();
 authRouter.post("/register", limiterRegister, userController.createUser);
 
 //логин
-authRouter.post("/login", userController.userAuthorization);
+authRouter.get("/login", userController.userAuthorization);
 
 //логин через access_token
-authRouter.post("/loginToken", userController.userAuthorizationToken);
+authRouter.get("/loginToken", userController.userAuthorizationToken);
 
 //обновить токены
-authRouter.post("/update", userController.getNewJWTtokens);
-
-//изменить данные пользователя
-authRouter.post("/changeData", limiterChangeData, userController.changeUserInformation);
+authRouter.get("/update", userController.getNewJWTtokens);
 
 //получить данные пользователя
-authRouter.post("/fetch", userController.getUserPublicInformation);
+authRouter.get("/fetch", userController.getUserPublicInformation);
+
+//изменить данные пользователя
+authRouter.put("/changeData", limiterChangeData, userController.changeUserInformation);
 
 //сбросить пароль
 authRouter.put("/resetPassword", userController.resetPassword);

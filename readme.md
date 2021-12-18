@@ -69,7 +69,7 @@ POST:
 ### Login user
 `http://localhost:5000/api/user/login`<br>
 ```
-POST:
+GET:
 {
     "login": "test",
     "password": "testtest"
@@ -90,7 +90,7 @@ Headers:
 {
     "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRlc3R0dCIsInBhc3N3b3JkIjoiJDJhJDEwJDV4bzRibDM4czczSmJIQmFlUmw1UC5lc0k0MXNUMC42LnBaUlhmZi5YekFBUXJDZ1RSNG5tIiwiaWF0IjoxNjM3NzQ0MjQ3LCJleHAiOjE2Mzc3NDYwNDd9.oLDKwnjSwZy1sR3EHVypsGgYXrT6k_Cq4VCr9n-VaII"
 }
-POST:
+GET:
 {
 }
 ```
@@ -109,8 +109,7 @@ Headers:
 {
     "Authorization": "3VpMzWC4KZU29yPZzwgQmbvDQMiJJY9s5"
 }
-
-POST:
+GET:
 {
 }
 ```
@@ -129,7 +128,7 @@ Headers:
 {
     "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRlc3R0dCIsInBhc3N3b3JkIjoiJDJhJDEwJDV4bzRibDM4czczSmJIQmFlUmw1UC5lc0k0MXNUMC42LnBaUlhmZi5YekFBUXJDZ1RSNG5tIiwiaWF0IjoxNjM3NzQ0MjQ3LCJleHAiOjE2Mzc3NDYwNDd9.oLDKwnjSwZy1sR3EHVypsGgYXrT6k_Cq4VCr9n-VaII"
 }
-POST
+GET
 {
 }
 ```
@@ -147,7 +146,7 @@ Headers:
 {
     "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRlc3R0dCIsInBhc3N3b3JkIjoiJDJhJDEwJDV4bzRibDM4czczSmJIQmFlUmw1UC5lc0k0MXNUMC42LnBaUlhmZi5YekFBUXJDZ1RSNG5tIiwiaWF0IjoxNjM3NzQ0MjQ3LCJleHAiOjE2Mzc3NDYwNDd9.oLDKwnjSwZy1sR3EHVypsGgYXrT6k_Cq4VCr9n-VaII"
 }
-POST
+PUT
 {
     "nickname": "new_nickname",
     "password": "new_pass",
@@ -167,7 +166,7 @@ POST
 ### Reset password
 `http://localhost:5000/api/user/resetPassword/`<br>
 ```
-POST
+PUT
 {
     "login": "test",
     "new_password": "New Password"
