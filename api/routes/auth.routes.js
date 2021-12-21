@@ -15,7 +15,7 @@ authRouter.post("/login", userController.userAuthorization);
 authRouter.get("/loginToken", userController.userAuthorizationToken);
 
 //обновить токены
-authRouter.post("/update", userController.getNewJWTtokens);
+authRouter.post("/newTokens", userController.getNewJWTtokens);
 
 //получить данные пользователя
 authRouter.get("/fetch", userController.getUserPublicInformation);
