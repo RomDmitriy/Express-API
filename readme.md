@@ -109,7 +109,7 @@ Headers:
 {
     "Authorization": "3VpMzWC4KZU29yPZzwgQmbvDQMiJJY9s5"
 }
-GET:
+POST:
 {
 }
 ```
