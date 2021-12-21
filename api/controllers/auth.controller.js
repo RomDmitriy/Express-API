@@ -1,5 +1,4 @@
 import db from "../../shared/database.js";
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { jwt_key } from "../../security_config.js";
 import faker from "faker";
@@ -23,22 +22,15 @@ export class UserController {
         );
 
         //валидация длин данных
-        if (req.body.login !== undefined && req.body.password !== undefined &&
-            req.body.login.length > 3 &&
-            req.body.login.length < 33 &&
-            req.body.password.length > 5 &&
-            req.body.password.length < 33
+        if (req.body.login?.length > 3 &&
+            req.body.login?.length < 33 &&
+            req.body.password?.length > 5 &&
+            req.body.password?.length < 33
         ) {
-            //шифруем пароль
-            const secPass = bcrypt.hashSync(
-                req.body.password,
-                bcrypt.genSaltSync(10)
-            );
-
             //генерируем токены
             let tokens = {
                 access_token: jwt.sign(
-                    { login: req.body.login, password: secPass },
+                    { login: req.body.login, password: req.body.password },
                     jwt_key,
                     { expiresIn: 1800 } //30 минут
                 ),
@@ -52,7 +44,7 @@ export class UserController {
                         `INSERT INTO Auth (login, nickname, password, last_login_utc, refresh_token, register_time_utc) VALUES (
                             '${req.body.login}', '${
                             req.body.login
-                        }', '${secPass}', '${getCurrDateTimeUTC()}', '${
+                        }', '${req.body.password}', '${getCurrDateTimeUTC()}', '${
                             tokens.refresh_token
                         }', '${getCurrDateTimeUTC()}');`
                     );
@@ -109,7 +101,7 @@ export class UserController {
         );
 
         //защита от пустых логина или пароля
-        if (req.body.login != null && req.body.password != null) {
+        if (req.body?.login != null && req.body?.password != null) {
             let user;
 
             //пробуем найти пользователя с таким логином
@@ -134,7 +126,7 @@ export class UserController {
             }
 
             //если пользователь найден, то сравниваем пароли
-            if (bcrypt.compareSync(req.body.password, user.rows[0].password)) {
+            if (req.body.password, user.rows[0].password) {
                 //генерируем новые токены
                 let newTokens = {
                     access_token: jwt.sign(
@@ -198,7 +190,7 @@ export class UserController {
 
     async userAuthorizationToken(req, res) {
         //защита от вылета
-        let access_token = req.get("Authorization");
+        let access_token = req.headers.authorization;
         if (access_token === undefined) {
             access_token = "undefined";
         }
@@ -212,7 +204,7 @@ export class UserController {
         );
 
         //защита от пустого токена
-        if (req.get("Authorization") === undefined) {
+        if (req.headers.authorization === undefined) {
             console.log("Failure! Status code: 401 (Wrong request)".red);
             res.status(400).json(); //неправильный запрос
             return;
@@ -287,7 +279,7 @@ export class UserController {
 
     async getNewJWTtokens(req, res) {
         //защита от вылета
-        let access_token = req.get("Authorization");
+        let access_token = req.headers.authorization;
         if (access_token === undefined) {
             access_token = "undefined";
         }
@@ -301,7 +293,7 @@ export class UserController {
         );
 
         //защита от плохого запроса
-        if (req.get("Authorization") === null) {
+        if (req.headers.authorization === null) {
             console.log("Failure! Status code: 400 (Bad request)".red);
             res.status(400).json(); //плохой запрос
             return;
@@ -378,8 +370,8 @@ export class UserController {
 
     async getUserPublicInformation(req, res) {
         //защита от вылета
-        let access_token;
-        if (req.get("Authorization") === undefined) {
+        let access_token = req.headers.authorization;
+        if (req.headers.authorization === undefined) {
             access_token = "undefined";
         }
 
@@ -466,16 +458,10 @@ export class UserController {
 
             //если пользователь найден
             if (user.rowCount) {
-                //шифруем пароль
-                const secPass = bcrypt.hashSync(
-                    req.body.new_password,
-                    bcrypt.genSaltSync(10)
-                );
-
                 //обновляем пароль в БД
                 try {
                     await db.query(
-                        `UPDATE Auth SET password = '${secPass}' WHERE login = '${req.body.login}'`
+                        `UPDATE Auth SET password = '${req.body.password}' WHERE login = '${req.body.login}'`
                     );
                     console.log("Success! Status code: 200".green);
                     res.status(200).json();
@@ -502,8 +488,8 @@ export class UserController {
 
     async changeUserInformation(req, res) {
         //защита от вылета
-        let access_token;
-        if (req.get("Authorization") === undefined) {
+        let access_token = req.headers.authorization;
+        if (req.headers.authorization === undefined) {
             access_token = "undefined";
         }
 
@@ -551,21 +537,15 @@ export class UserController {
 
                 //парсинг смены пароля
                 if (req.body.password !== undefined) {
-                    //шифруем пароль
-                    const secPass = bcrypt.hashSync(
-                        req.body.password,
-                        bcrypt.genSaltSync(10)
-                    );
-
                     //передаём в БД зашифрованный пароль
-                    parsedInfo.password = secPass;
+                    parsedInfo.password = req.body.password;
 
                     //генерируем новые токены
                     var newTokens = {
                         access_token: jwt.sign(
                             {
                                 login: userDecoded.login,
-                                password: secPass,
+                                password: req.body.password,
                             },
                             jwt_key,
                             { expiresIn: 1800 } //30 минут
@@ -636,8 +616,8 @@ export class UserController {
 
     async deleteUser(req, res) {
         //защита от вылета
-        let access_token;
-        if (req.get("Authorization") === undefined) {
+        let access_token = req.headers.authorization;
+        if (req.headers.authorization === undefined) {
             access_token = "undefined";
         }
 
