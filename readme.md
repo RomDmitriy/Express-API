@@ -103,7 +103,7 @@ GET:
 > 500 status: Database is not available.<br>
 
 ### Get new tokens
-`http://localhost:5000/api/user/check`<br>
+`http://localhost:5000/api/user/update`<br>
 ```
 Headers:
 {
