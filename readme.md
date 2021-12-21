@@ -63,7 +63,7 @@ POST:
 
 > 400 status: Bad request (check field names or length of values).<br>
 > 409 status: This user already exists.<br>
-> 429 status: User tries register too many accounts (restriction on changing data once a 10 minutes).<br>
+> 429 status: User tries register too many accounts (restriction on changing data 5 times per 10 minutes).<br>
 > 500 status: Database is not available.<br>
 
 ### Login user
@@ -160,7 +160,7 @@ PUT
 
 > 401 status: This access_token has expired or bad access_token.<br>
 > 404 status: No one user with this token not found.<br>
-> 429 status: User tries changes data too often (restriction on changing data once a minute).<br>
+> 429 status: User tries changes data too often (restriction on changing data 5 times per minute).<br>
 > 500 status: Database is not available.<br>
 
 ### Reset password
