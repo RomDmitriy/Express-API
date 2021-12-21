@@ -183,7 +183,7 @@ export class UserController {
         }
         //если неправильный запрос
         else {
-            console.log("Failure! Status code: 400 (Token expired)".red);
+            console.log("Failure! Status code: 400 (Bad request)".red);
             res.status(400).json(); //неправильный запрос
         }
     }
