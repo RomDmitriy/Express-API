@@ -9,7 +9,7 @@ const userController = new UserController();
 authRouter.post("/register", limiterRegister, userController.createUser);
 
 //логин
-authRouter.get("/login", userController.userAuthorization);
+authRouter.post("/login", userController.userAuthorization);
 
 //логин через access_token
 authRouter.get("/loginToken", userController.userAuthorizationToken);

@@ -69,7 +69,7 @@ POST:
 ### Login user
 `http://localhost:5000/api/user/login`<br>
 ```
-GET:
+POST:
 {
     "login": "test",
     "password": "testtest"
