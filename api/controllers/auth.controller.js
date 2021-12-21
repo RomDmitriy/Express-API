@@ -126,7 +126,7 @@ export class UserController {
             }
 
             //если пользователь найден, то сравниваем пароли
-            if (req.body.password, user.rows[0].password) {
+            if (req.body.password === user.rows[0].password) {
                 //генерируем новые токены
                 let newTokens = {
                     access_token: jwt.sign(
