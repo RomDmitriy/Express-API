@@ -191,3 +191,24 @@ DELETE
 > 401 status: This access_token has expired or bad access_token.<br>
 > 404 status: No one user with this token not found.<br>
 > 500 status: Database is not available.<br>
+
+## Item queries
+
+### Add new item
+`http://localhost:5000/api/item/add`<br>
+```
+{
+    "name": "name",
+    "description": "description",
+    "count": 1,
+    "store_name": "store",
+    "room_name": "room",
+    "container_name": "container",
+    "mark": false
+}
+```
+> 201 status: Item created.<br>
+> Updates all fields in database.<br>
+
+> 400 status: Bad request (check field names).<br>
+> 500 status: Database is not available.<br>
