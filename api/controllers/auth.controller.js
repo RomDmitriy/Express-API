@@ -279,7 +279,7 @@ export class UserController {
 
     async getNewJWTtokens(req, res) {
         //защита от вылета
-        let access_token = req.headers.authorization;
+        let access_token = req.body.refresh_token;
         if (access_token === undefined) {
             access_token = "undefined";
         }
@@ -293,7 +293,7 @@ export class UserController {
         );
 
         //защита от плохого запроса
-        if (req.headers.authorization === null) {
+        if (req.body.refresh_token === null) {
             console.log("Failure! Status code: 400 (Bad request)".red);
             res.status(400).json(); //плохой запрос
             return;

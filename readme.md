@@ -84,7 +84,7 @@ POST:
 > 500 status: Database is not available.<br>
 
 ### Login user via access token
-`http://localhost:5000/api/user/loginToken`<br>
+`http://localhost:5000/api/user/login_token`<br>
 ```
 Headers:
 {
@@ -103,7 +103,7 @@ GET:
 > 500 status: Database is not available.<br>
 
 ### Get new tokens
-`http://localhost:5000/api/user/newTokens`<br>
+`http://localhost:5000/api/user/new_tokens`<br>
 ```
 Headers:
 {
@@ -122,7 +122,7 @@ POST:
 
 ### Get all public information about user
 (without id, login, password and refresh_token)<br>
-`http://localhost:5000/api/user/fetch/`<br>
+`http://localhost:5000/api/user/get_info/`<br>
 ```
 Headers:
 {
@@ -140,7 +140,7 @@ GET
 
 ### Change user information
 (nickname, password, about, avatar_url, question_id, question_answer can be changed)<br>
-`http://localhost:5000/api/user/changeData/`<br>
+`http://localhost:5000/api/user/change_data/`<br>
 ```
 Headers:
 {
@@ -164,7 +164,7 @@ PUT
 > 500 status: Database is not available.<br>
 
 ### Reset password
-`http://localhost:5000/api/user/resetPassword/`<br>
+`http://localhost:5000/api/user/reset_password/`<br>
 ```
 PUT
 {

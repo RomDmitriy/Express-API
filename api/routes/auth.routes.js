@@ -12,21 +12,21 @@ authRouter.post("/register", limiterRegister, userController.createUser);
 authRouter.post("/login", userController.userAuthorization);
 
 //логин через access_token
-authRouter.get("/loginToken", userController.userAuthorizationToken);
+authRouter.get("/login_token", userController.userAuthorizationToken);
 
 //обновить токены
-authRouter.post("/newTokens", userController.getNewJWTtokens);
+authRouter.post("/new_tokens", userController.getNewJWTtokens);
 
 //получить данные пользователя
-authRouter.get("/fetch", userController.getUserPublicInformation);
+authRouter.get("/get_info", userController.getUserPublicInformation);
 
 //изменить данные пользователя
-authRouter.put("/changeData", limiterChangeData, userController.changeUserInformation);
+authRouter.put("/change_data", limiterChangeData, userController.changeUserInformation);
 
 //сбросить пароль
-authRouter.put("/resetPassword", userController.resetPassword);
+authRouter.put("/reset_password", userController.resetPassword);
 
 //удалить пользователя
-authRouter.delete("/deleteUser", userController.deleteUser);
+authRouter.delete("/delete_user", userController.deleteUser);
 
 export default authRouter;
