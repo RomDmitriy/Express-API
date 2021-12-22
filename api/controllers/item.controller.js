@@ -1,20 +1,22 @@
 import db from "../../shared/database.js";
 import { getCurrTime } from "../../shared/times.js";
+import jwt from "jsonwebtoken";
+import { jwt_key } from "../../security_config.js";
 
 export class ItemController {
   async addItem(req, res) {
     //защита от вылета
-    let name = req.body.name;
-    if (name === undefined) {
-      name = "undefined";
+    let access_token = req.headers.authorization;
+    if (access_token === undefined) {
+        access_token = "undefined";
     }
 
     //логирование
     console.log();
     console.log(
       (" " + getCurrTime() + " ").bgWhite.black +
-        " Creating new item with name = " +
-        name
+        " Creating new item for user with access token = " +
+        access_token
     );
 
     if (
@@ -28,48 +30,57 @@ export class ItemController {
       req.body?.mark != null &&
       typeof req.body?.mark == "boolean"
     ) {
-      //let res;
-
-      // ищем комнату
-      // try {
-      //     res = await db.query(`SELECT id FROM containers WHERE name='${req.body.room_name}';`);
-      // }
-      // catch(err)
-      // {
-      //     console.log("Failure! Status code: 500".red);
-      //     console.log(
-      //         "Warning! Database is unavaliable!".bgYellow.black
-      //     );
-      //     res.status(500).json(); //проблема с подключением к БД
-      //     return;
-      // }
-
-      // if (res.rowCount) {
-      //     console.log("Failure! Status code: 404 (Container not exists)".red);
-      //     res.status(404).json(); //Контейнер не найден
-      //     return;
-      // }
-
+      //проверяем access_token на валидность
       try {
-        await db.query(`INSERT INTO items (container_name, room_name, store_name, name, description, count, mark) VALUES (
-                    '${req.body.container_name}',
-                    '${req.body.room_name}',
-                    '${req.body.store_name}',
-                    '${req.body.name}',
-                    '${req.body.description}',
-                    '${req.body.count}',
-                    '${req.body.mark}'
-                );`);
+        //если токен невалидный, то jwt.verify вызовет ошибку
+        let userDecoded = jwt.verify(access_token, jwt_key);
 
-        //всё хорошо
-        console.log("Success! Status code: 201".green);
-        res.status(201).json(); //всё хорошо
-        return;
+        //проверка на нахождение пользователя в БД
+        let user;
+        try {
+          user = await db.query(
+            `SELECT id FROM auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
+          );
+        } catch (err) {
+          console.log("Failure! Status code: 500".red);
+          console.log("Warning! Database is unavaliable!".bgYellow.black);
+          res.status(500).json(); //проблема с подключением к БД
+          return;
+        }
+
+        //если пользователь найден
+        if (user.rowCount) {
+          try {
+            await db.query(`INSERT INTO items (owner_id, container_name, room_name, store_name, name, description, count, mark) VALUES (
+                '${user.rows[0].id}',
+                '${req.body.container_name}',
+                '${req.body.room_name}',
+                '${req.body.store_name}',
+                '${req.body.name}',
+                '${req.body.description}',
+                '${req.body.count}',
+                '${req.body.mark}'
+                        );`);
+
+            //всё хорошо
+            console.log("Success! Status code: 201".green);
+            res.status(201).json(); //всё хорошо
+            return;
+          } catch (err) {
+            console.log("Failure! Status code: 500".red);
+            console.log("Warning! Database is unavaliable!".bgYellow.black);
+            res.status(500).json(); //проблема с подключением к БД
+            return;
+          }
+        } else {
+          console.log("Failure! Status code: 404 (User not found)".red);
+          res.status(404).json(); //пользователь с таким токеном не существует
+          return;
+        }
       } catch (err) {
-        console.log(err);
-        console.log("Failure! Status code: 500".red);
-        console.log("Warning! Database is unavaliable!".bgYellow.black);
-        res.status(500).json(); //проблема с подключением к БД
+        //если токен недействителен
+        console.log("Failure! Status code: 401 (Token expired)".red);
+        res.status(401).json(); //токен недействителен
         return;
       }
     } else {
@@ -79,10 +90,123 @@ export class ItemController {
     }
   }
 
-  //IN DEV
-  async getList(req, res) {
+  async getItems(req, res) {
+    //защита от вылета
+    let access_token = req.headers.authorization;
+    if (access_token === undefined) {
+      access_token = "undefined";
+    }
+
+    //логирование
     console.log();
-    const items = await db.query(`SELECT id, name FROM Items;`);
-    res.json([{ items }]);
+    console.log(
+      (" " + getCurrTime() + " ").bgWhite.black +
+        " Get items for user with access token = " +
+        access_token
+    );
+
+    try {
+      //если токен невалидный, то jwt.verify вызовет ошибку
+      let userDecoded = jwt.verify(access_token, jwt_key);
+
+      //проверка на нахождение пользователя в БД
+      let user;
+      try {
+        user = await db.query(
+          `SELECT id FROM auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
+        );
+      } catch (err) {
+        console.log("Failure! Status code: 500".red);
+        console.log("Warning! Database is unavaliable!".bgYellow.black);
+        res.status(500).json(); //проблема с подключением к БД
+        return;
+      }
+
+      //если пользователь найден
+      if (user.rowCount) {
+        try {
+          let items = await db.query(`SELECT * FROM items WHERE owner_id=${user.rows[0].id};`);
+
+          //всё хорошо
+          console.log("Success! Status code: 200".green);
+          res.status(200).json(items.rows); //всё хорошо
+          return;
+        } catch (err) {
+          console.log("Failure! Status code: 500".red);
+          console.log("Warning! Database is unavaliable!".bgYellow.black);
+          res.status(500).json(); //проблема с подключением к БД
+          return;
+        }
+      } else {
+        console.log("Failure! Status code: 404 (User not found)".red);
+        res.status(404).json(); //пользователь с таким токеном не существует
+        return;
+      }
+    } catch (err) {
+      //если токен недействителен
+      console.log("Failure! Status code: 401 (Token expired)".red);
+      res.status(401).json(); //токен недействителен
+      return;
+    }
+  }
+
+  async deleteItem(req, res) {
+    //защита от вылета
+    let access_token = req.headers.authorization;
+    if (access_token === undefined) {
+      access_token = "undefined";
+    }
+
+    //логирование
+    console.log();
+    console.log(
+      (" " + getCurrTime() + " ").bgWhite.black +
+        " Delete item for user with access token = " +
+        access_token
+    );
+
+    try {
+      //если токен невалидный, то jwt.verify вызовет ошибку
+      let userDecoded = jwt.verify(access_token, jwt_key);
+
+      //проверка на нахождение пользователя в БД
+      let user;
+      try {
+        user = await db.query(
+          `SELECT id FROM auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
+        );
+      } catch (err) {
+        console.log("Failure! Status code: 500".red);
+        console.log("Warning! Database is unavaliable!".bgYellow.black);
+        res.status(500).json(); //проблема с подключением к БД
+        return;
+      }
+
+      //если пользователь найден
+      if (user.rowCount) {
+        try {
+          await db.query(`DELETE FROM items WHERE owner_id=${user.rows[0].id} AND id=${req.params.item_id};`);
+
+          //всё хорошо
+          console.log("Success! Status code: 200".green);
+          res.status(200).json(); //всё хорошо
+          return;
+        } catch (err) {
+          console.log("Failure! Status code: 500".red);
+          console.log("Warning! Database is unavaliable!".bgYellow.black);
+          res.status(500).json(); //проблема с подключением к БД
+          return;
+        }
+      } else {
+        console.log("Failure! Status code: 404 (User not found)".red);
+        res.status(404).json(); //пользователь с таким токеном не существует
+        return;
+      }
+    } catch (err) {
+      //если токен недействителен
+      console.log("Failure! Status code: 401 (Token expired)".red);
+      res.status(401).json(); //токен недействителен
+      return;
+    }
   }
 }

@@ -197,7 +197,7 @@ DELETE
 ### Add new item
 `http://localhost:5000/api/item/add`<br>
 ```
-{
+POST{
     "name": "name",
     "description": "description",
     "count": 1,
@@ -209,6 +209,36 @@ DELETE
 ```
 > 201 status: Item created.<br>
 > Updates all fields in database.<br>
+
+> 400 status: Bad request (check field names).<br>
+> 500 status: Database is not available.<br>
+
+### Get items
+`http://localhost:5000/api/item/get`<br>
+Headers:
+{
+    "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRlc3R0dCIsInBhc3N3b3JkIjoiJDJhJDEwJDV4bzRibDM4czczSmJIQmFlUmw1UC5lc0k0MXNUMC42LnBaUlhmZi5YekFBUXJDZ1RSNG5tIiwiaWF0IjoxNjM3NzQ0MjQ3LCJleHAiOjE2Mzc3NDYwNDd9.oLDKwnjSwZy1sR3EHVypsGgYXrT6k_Cq4VCr9n-VaII"
+}
+```
+GET{
+}
+```
+> 200 status: Returns array of items.<br>
+
+> 400 status: Bad request (check field names).<br>
+> 500 status: Database is not available.<br>
+
+### Delete item
+`http://localhost:5000/api/item/delete/<item_id>`<br>
+Headers:
+{
+    "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRlc3R0dCIsInBhc3N3b3JkIjoiJDJhJDEwJDV4bzRibDM4czczSmJIQmFlUmw1UC5lc0k0MXNUMC42LnBaUlhmZi5YekFBUXJDZ1RSNG5tIiwiaWF0IjoxNjM3NzQ0MjQ3LCJleHAiOjE2Mzc3NDYwNDd9.oLDKwnjSwZy1sR3EHVypsGgYXrT6k_Cq4VCr9n-VaII"
+}
+```
+DELETE{
+}
+```
+> 200 status: Item deleted.<br>
 
 > 400 status: Bad request (check field names).<br>
 > 500 status: Database is not available.<br>

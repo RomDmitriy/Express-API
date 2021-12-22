@@ -4,8 +4,13 @@ import { ItemController } from "../controllers/item.controller.js";
 const itemRouter = Router();
 const itemController = new ItemController();
 
+//Добавление
 itemRouter.post("/add", itemController.addItem);
 
-//itemsRouter.get('/list', itemController.getList);
+//Получение списка предметов
+itemRouter.get('/get', itemController.getItems);
+
+//Удаление
+itemRouter.delete('/delete/:item_id', itemController.deleteItem);
 
 export default itemRouter;

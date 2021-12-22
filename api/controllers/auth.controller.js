@@ -413,12 +413,12 @@ export class UserController {
                 res.status(200).json(user.rows[0]); //всё хорошо
                 return;
             } else {
-                console.log("Failure! Status code: 404 (User already exists)".red);
+                console.log("Failure! Status code: 404 (User not found)".red);
                 res.status(404).json(); //пользователь с таким токеном не существует
                 return;
             }
-            //если токен недействителен
         } catch (err) {
+            //если токен недействителен
             console.log("Failure! Status code: 401 (Token expired)".red);
             res.status(401).json(); //токен недействителен
             return;
