@@ -13,4 +13,7 @@ itemRouter.get('/get', itemController.getItems);
 //Удаление
 itemRouter.delete('/delete/:item_id', itemController.deleteItem);
 
+//Обновление отметки
+itemRouter.put('/mark/:item_id/:item_mark', itemController.updateMark);
+
 export default itemRouter;

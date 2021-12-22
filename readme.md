@@ -208,7 +208,6 @@ POST{
 }
 ```
 > 201 status: Item created.<br>
-> Updates all fields in database.<br>
 
 > 400 status: Bad request (check field names).<br>
 > 500 status: Database is not available.<br>
@@ -224,6 +223,21 @@ GET{
 }
 ```
 > 200 status: Returns array of items.<br>
+
+> 400 status: Bad request (check field names).<br>
+> 500 status: Database is not available.<br>
+
+### Update mark
+`http://localhost:5000/api/item/mark/<item_id>/<mark(true or false)>`<br>
+Headers:
+{
+    "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRlc3R0dCIsInBhc3N3b3JkIjoiJDJhJDEwJDV4bzRibDM4czczSmJIQmFlUmw1UC5lc0k0MXNUMC42LnBaUlhmZi5YekFBUXJDZ1RSNG5tIiwiaWF0IjoxNjM3NzQ0MjQ3LCJleHAiOjE2Mzc3NDYwNDd9.oLDKwnjSwZy1sR3EHVypsGgYXrT6k_Cq4VCr9n-VaII"
+}
+```
+PUT{
+}
+```
+> 200 status: Mark updated.<br>
 
 > 400 status: Bad request (check field names).<br>
 > 500 status: Database is not available.<br>
