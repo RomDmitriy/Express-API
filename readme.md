@@ -59,7 +59,7 @@ POST:
 }
 ```
 > 201 status: Returns access_token (expires in 30 minutes) and refresh_token (expires after any refresh tokens).<br>
-> Updates login, nickname, password, last_time_utc and register_time_utc in database.<br>
+> Updates login, nickname, password, avatar_url, last_time_utc and register_time_utc in database.<br>
 
 > 400 status: Bad request (check field names or length of values).<br>
 > 409 status: This user already exists.<br>

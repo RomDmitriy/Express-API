@@ -1,6 +1,6 @@
 import db from "../../shared/database.js";
 import jwt from "jsonwebtoken";
-import { jwt_key } from "../../security_config.js";
+import { base_avatar, jwt_key } from "../../security_config.js";
 import faker from "faker";
 import { getCurrTime, getCurrDateTimeUTC } from "../../shared/times.js";
 import "colors";
@@ -41,12 +41,15 @@ export class UserController {
             while (true) {
                 try {
                     await db.query(
-                        `INSERT INTO Auth (login, nickname, password, last_login_utc, refresh_token, register_time_utc) VALUES (
-                            '${req.body.login}', '${
-                            req.body.login
-                        }', '${req.body.password}', '${getCurrDateTimeUTC()}', '${
-                            tokens.refresh_token
-                        }', '${getCurrDateTimeUTC()}');`
+                        `INSERT INTO Auth (login, nickname, password, last_login_utc, refresh_token, register_time_utc, avatar_url) VALUES (
+                            '${req.body.login}', 
+                            '${req.body.login}', 
+                            '${req.body.password}', 
+                            '${getCurrDateTimeUTC()}',
+                            '${tokens.refresh_token}', 
+                            '${getCurrDateTimeUTC()}',
+                            '${base_avatar}'
+                        );`
                     );
                 } catch (err) {
                     //обработка когда refresh_token уже занят
