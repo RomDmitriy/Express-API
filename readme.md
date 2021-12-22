@@ -105,12 +105,9 @@ GET:
 ### Get new tokens
 `http://localhost:5000/api/user/new_tokens`<br>
 ```
-Headers:
-{
-    "Authorization": "3VpMzWC4KZU29yPZzwgQmbvDQMiJJY9s5"
-}
 POST:
 {
+    "refresh_token": "3VpMzWC4KZU29yPZzwgQmbvDQMiJJY9s5"
 }
 ```
 > 200 status: Returns access_token (expires in 30 minutes) and refresh_token (expires after any refresh tokens).<br>

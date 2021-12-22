@@ -4,7 +4,7 @@ import { ItemController } from "../controllers/item.controller.js";
 const itemRouter = Router();
 const itemController = new ItemController();
 
-//itemRouter.post("/add", itemController.addItem);
+itemRouter.post("/add", itemController.addItem);
 
 //itemsRouter.get('/list', itemController.getList);
 

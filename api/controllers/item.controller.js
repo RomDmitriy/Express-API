@@ -2,10 +2,20 @@ import db from "../../shared/database.js";
 
 export class ItemController {
     async addItem(req, res) {
+        //защита от вылета
+        let name = req.body.name;
+        if (name === undefined) {
+            name = "undefined";
+        }
+
+        //логирование
         console.log();
         console.log(
-            "[Create item] New item with name = " + req.body.name + "..."
+            (" " + getCurrTime() + " ").bgWhite.black +
+                " Creating new user with name = " +
+                name
         );
+        //TODO BELOW
         if (
             req.body.name != null &&
             req.body.unique != null &&
