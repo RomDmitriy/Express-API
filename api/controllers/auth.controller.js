@@ -570,12 +570,6 @@ export class UserController {
                 //парсинг смены аватарки
                 parsedInfo.avatar_url = req.body?.avatar_url;
 
-                //парсинг id вопроса
-                parsedInfo.question_id = req.body?.question_id;
-
-                //парсинг ответа на вопрос
-                parsedInfo.question_answer = req.body?.question_answer;
-
                 //чистка от undefined
                 parsedInfo = JSON.parse(JSON.stringify(parsedInfo));
 
