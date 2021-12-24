@@ -41,14 +41,15 @@ export class UserController {
             while (true) {
                 try {
                     await db.query(
-                        `INSERT INTO Auth (login, nickname, password, last_login, refresh_token, register_time, avatar_url) VALUES (
-                            '${req.body.login}', 
-                            '${req.body.login}', 
-                            '${req.body.password}', 
+                        `INSERT INTO Auth (login, nickname, password, last_login, refresh_token, register_time, avatar_url, email) VALUES (
+                            '${req.body?.login}', 
+                            '${req.body?.login}', 
+                            '${req.body?.password}', 
                             ${getCurrDateTimeInSeconds()},
                             '${tokens.refresh_token}', 
                             ${getCurrDateTimeInSeconds()},
-                            '${base_avatar}'
+                            '${base_avatar}',
+                            '${req.body?.email}'
                         );`
                     );
                 } catch (err) {
@@ -396,7 +397,7 @@ export class UserController {
             //получаем публичные данные
             try {
                 user = await db.query(
-                    `SELECT nickname, about, avatar_url, last_login, register_time FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
+                    `SELECT nickname, about, avatar_url, last_login, register_time, email FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
                 );
             } catch (err) {
                 console.log("Failure! Status code: 500".red);
@@ -536,7 +537,7 @@ export class UserController {
                 var parsedInfo = {};
 
                 //парсинг смены ника (не логина!)
-                parsedInfo.nickname = req.body.nickname;
+                parsedInfo.nickname = req.body?.nickname;
 
                 //парсинг смены пароля
                 if (req.body.password !== undefined) {
@@ -561,16 +562,19 @@ export class UserController {
                 }
 
                 //парсинг смены информации о себе
-                parsedInfo.about = req.body.about;
+                parsedInfo.about = req.body?.about;
+
+                //парсинг смены почты
+                parsedInfo.email = req.body?.email;
 
                 //парсинг смены аватарки
-                parsedInfo.avatar_url = req.body.avatar_url;
+                parsedInfo.avatar_url = req.body?.avatar_url;
 
                 //парсинг id вопроса
-                parsedInfo.question_id = req.body.question_id;
+                parsedInfo.question_id = req.body?.question_id;
 
                 //парсинг ответа на вопрос
-                parsedInfo.question_answer = req.body.question_answer;
+                parsedInfo.question_answer = req.body?.question_answer;
 
                 //чистка от undefined
                 parsedInfo = JSON.parse(JSON.stringify(parsedInfo));
@@ -588,6 +592,7 @@ export class UserController {
 
                 //отправляем запрос в БД
                 try {
+                    console.log(`UPDATE Auth SET ${request} WHERE login = '${userDecoded.login}';`);
                     await db.query(
                         `UPDATE Auth SET ${request} WHERE login = '${userDecoded.login}';`
                     );

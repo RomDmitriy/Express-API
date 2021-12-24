@@ -59,7 +59,7 @@ POST:
 }
 ```
 > 201 status: Returns access_token (expires in 30 minutes) and refresh_token (expires after any refresh tokens).<br>
-> Updates login, nickname, password, avatar_url, last_time and register_time in database.<br>
+> Updates login, nickname, password, email, avatar_url, last_time and register_time in database.<br>
 
 > 400 status: Bad request (check field names or length of values).<br>
 > 409 status: This user already exists.<br>
@@ -150,7 +150,8 @@ PUT
     "about": "new about",
     "avatar_url": "new_avatar_url",
     "question_id": 0,
-    "question_answer": "Illya"
+    "question_answer": "Illya",
+    "email": "test@mail.ru"
 }
 ```
 > 200 status: Returns new tokens (only if you changed user password) or nothing.<br>
