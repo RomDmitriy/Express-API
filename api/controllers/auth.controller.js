@@ -2,7 +2,11 @@ import db from "../../shared/database.js";
 import jwt from "jsonwebtoken";
 import { base_avatar, jwt_key } from "../../security_config.js";
 import faker from "faker";
+<<<<<<< HEAD
 import { getCurrTime, getCurrDateTimeInSeconds } from "../../shared/times.js";
+=======
+import { getCurrTime, getCurrDateTime } from "../../shared/times.js";
+>>>>>>> b2e08e0d994190325f85cb818c236aa4f33facb6
 import "colors";
 
 export class UserController {
@@ -41,6 +45,7 @@ export class UserController {
             while (true) {
                 try {
                     await db.query(
+<<<<<<< HEAD
                         `INSERT INTO Auth (login, nickname, password, last_login, refresh_token, register_time, avatar_url) VALUES (
                             '${req.body.login}', 
                             '${req.body.login}', 
@@ -48,6 +53,15 @@ export class UserController {
                             ${getCurrDateTimeInSeconds()},
                             '${tokens.refresh_token}', 
                             ${getCurrDateTimeInSeconds()},
+=======
+                        `INSERT INTO Auth (login, nickname, password, last_login_, refresh_token, register_time_, avatar_url) VALUES (
+                            '${req.body.login}', 
+                            '${req.body.login}', 
+                            '${req.body.password}', 
+                            '${getCurrDateTime()}',
+                            '${tokens.refresh_token}', 
+                            '${getCurrDateTime()}',
+>>>>>>> b2e08e0d994190325f85cb818c236aa4f33facb6
                             '${base_avatar}'
                         );`
                     );
@@ -143,12 +157,20 @@ export class UserController {
                     refresh_token: faker.finance.bitcoinAddress(),
                 };
 
+<<<<<<< HEAD
                 //отправляем новый refresh_token и last_login в БД
+=======
+                //отправляем новый refresh_token и last_login_ в БД
+>>>>>>> b2e08e0d994190325f85cb818c236aa4f33facb6
                 while (true) {
                     try {
                         await db.query(
                             `UPDATE Auth SET refresh_token = '${newTokens.refresh_token}', 
+<<<<<<< HEAD
                             last_login = '${getCurrDateTimeInSeconds()}' WHERE login = '${req.body.login}';`
+=======
+                            last_login_ = '${getCurrDateTime()}' WHERE login = '${req.body.login}';`
+>>>>>>> b2e08e0d994190325f85cb818c236aa4f33facb6
                         );
                     } catch (err) {
                         //обработка когда refresh_token уже занят
@@ -243,11 +265,19 @@ export class UserController {
 
             //если пользователь найден, то сравниваем пароли
             if (userDecoded.password === userPassword.rows[0].password) {
+<<<<<<< HEAD
                 //отправляем новый last_login в БД
                 while (true) {
                     try {
                         await db.query(
                             `UPDATE Auth SET last_login = '${getCurrDateTimeInSeconds()}' 
+=======
+                //отправляем новый last_login_ в БД
+                while (true) {
+                    try {
+                        await db.query(
+                            `UPDATE Auth SET last_login_ = '${getCurrDateTime()}' 
+>>>>>>> b2e08e0d994190325f85cb818c236aa4f33facb6
                             WHERE login = '${req.body.login}'`
                         );
                     } catch (err) {
@@ -343,7 +373,11 @@ export class UserController {
             try {
                 await db.query(
                     `UPDATE Auth SET refresh_token = '${newTokens.refresh_token}', 
+<<<<<<< HEAD
                     last_login = '${getCurrDateTimeInSeconds()}' 
+=======
+                    last_login_ = '${getCurrDateTime()}' 
+>>>>>>> b2e08e0d994190325f85cb818c236aa4f33facb6
                     WHERE refresh_token = '${access_token}'`
                 );
             } catch (err) {
@@ -396,7 +430,11 @@ export class UserController {
             //получаем публичные данные
             try {
                 user = await db.query(
+<<<<<<< HEAD
                     `SELECT nickname, about, avatar_url, last_login, register_time FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
+=======
+                    `SELECT nickname, about, avatar_url, to_char(last_login_, 'DD.MM.YYYY HH24:MI:SS') as last_login_, to_char(register_time_, 'DD.MM.YYYY HH24:MI:SS') as register_time_ FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
+>>>>>>> b2e08e0d994190325f85cb818c236aa4f33facb6
                 );
             } catch (err) {
                 console.log("Failure! Status code: 500".red);
