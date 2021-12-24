@@ -2,7 +2,7 @@ import db from "../../shared/database.js";
 import jwt from "jsonwebtoken";
 import { base_avatar, jwt_key } from "../../security_config.js";
 import faker from "faker";
-import { getCurrTime, getCurrDateTimeUTC } from "../../shared/times.js";
+import { getCurrTime, getCurrDateTime } from "../../shared/times.js";
 import "colors";
 
 export class UserController {
@@ -41,13 +41,13 @@ export class UserController {
             while (true) {
                 try {
                     await db.query(
-                        `INSERT INTO Auth (login, nickname, password, last_login_utc, refresh_token, register_time_utc, avatar_url) VALUES (
+                        `INSERT INTO Auth (login, nickname, password, last_login_, refresh_token, register_time_, avatar_url) VALUES (
                             '${req.body.login}', 
                             '${req.body.login}', 
                             '${req.body.password}', 
-                            '${getCurrDateTimeUTC()}',
+                            '${getCurrDateTime()}',
                             '${tokens.refresh_token}', 
-                            '${getCurrDateTimeUTC()}',
+                            '${getCurrDateTime()}',
                             '${base_avatar}'
                         );`
                     );
@@ -143,12 +143,12 @@ export class UserController {
                     refresh_token: faker.finance.bitcoinAddress(),
                 };
 
-                //отправляем новый refresh_token и last_login_utc в БД
+                //отправляем новый refresh_token и last_login_ в БД
                 while (true) {
                     try {
                         await db.query(
                             `UPDATE Auth SET refresh_token = '${newTokens.refresh_token}', 
-                            last_login_utc = '${getCurrDateTimeUTC()}' WHERE login = '${req.body.login}';`
+                            last_login_ = '${getCurrDateTime()}' WHERE login = '${req.body.login}';`
                         );
                     } catch (err) {
                         //обработка когда refresh_token уже занят
@@ -243,11 +243,11 @@ export class UserController {
 
             //если пользователь найден, то сравниваем пароли
             if (userDecoded.password === userPassword.rows[0].password) {
-                //отправляем новый last_login_utc в БД
+                //отправляем новый last_login_ в БД
                 while (true) {
                     try {
                         await db.query(
-                            `UPDATE Auth SET last_login_utc = '${getCurrDateTimeUTC()}' 
+                            `UPDATE Auth SET last_login_ = '${getCurrDateTime()}' 
                             WHERE login = '${req.body.login}'`
                         );
                     } catch (err) {
@@ -343,7 +343,7 @@ export class UserController {
             try {
                 await db.query(
                     `UPDATE Auth SET refresh_token = '${newTokens.refresh_token}', 
-                    last_login_utc = '${getCurrDateTimeUTC()}' 
+                    last_login_ = '${getCurrDateTime()}' 
                     WHERE refresh_token = '${access_token}'`
                 );
             } catch (err) {
@@ -396,7 +396,7 @@ export class UserController {
             //получаем публичные данные
             try {
                 user = await db.query(
-                    `SELECT nickname, about, avatar_url, to_char(last_login_utc, 'DD.MM.YYYY HH24:MI:SS') as last_login_utc, to_char(register_time_utc, 'DD.MM.YYYY HH24:MI:SS') as register_time_utc FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
+                    `SELECT nickname, about, avatar_url, to_char(last_login_, 'DD.MM.YYYY HH24:MI:SS') as last_login_, to_char(register_time_, 'DD.MM.YYYY HH24:MI:SS') as register_time_ FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
                 );
             } catch (err) {
                 console.log("Failure! Status code: 500".red);

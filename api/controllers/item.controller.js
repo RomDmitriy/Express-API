@@ -248,7 +248,7 @@ export class ItemController {
       }
 
         try {
-          console.log(`UPDATE items SET mark=${req.params.item_mark} WHERE owner_id=${user.rows[0].id} AND id=${req.params.item_id};`)
+          console.log(`SET mark=${req.params.item_mark} WHERE owner_id=${user.rows[0].id} AND id=${req.params.item_id};`)
           await db.query(
             `UPDATE items SET mark=${req.params.item_mark} WHERE owner_id=${user.rows[0].id} AND id=${req.params.item_id};`
           );

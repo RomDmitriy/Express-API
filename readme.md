@@ -59,7 +59,7 @@ POST:
 }
 ```
 > 201 status: Returns access_token (expires in 30 minutes) and refresh_token (expires after any refresh tokens).<br>
-> Updates login, nickname, password, avatar_url, last_time_utc and register_time_utc in database.<br>
+> Updates login, nickname, password, avatar_url, last_time and register_time in database.<br>
 
 > 400 status: Bad request (check field names or length of values).<br>
 > 409 status: This user already exists.<br>
@@ -76,7 +76,7 @@ POST:
 }
 ```
 > 200 status: Returns access_token (expires in 30 minutes) and refresh_token (expires after any refresh tokens).<br>
-> Updates last_time_utc and refresh_token in database.<br>
+> Updates last_time and refresh_token in database.<br>
 
 > 400 status: Bad request.<br>
 > 401 status: Wrong password.<br>
@@ -95,7 +95,7 @@ GET:
 }
 ```
 > 200 status: User found.<br>
-> Updates last_time_utc in database.<br>
+> Updates last_time in database.<br>
 
 > 400 status: Bad request.<br>
 > 401 status: This access_token has expired or bad access_token.<br>
@@ -111,7 +111,7 @@ POST:
 }
 ```
 > 200 status: Returns access_token (expires in 30 minutes) and refresh_token (expires after any refresh tokens).<br>
-> Updates last_login_utc and refresh_token in database.<br>
+> Updates last_login and refresh_token in database.<br>
 
 > 400 status: This refresh_token is null.<br>
 > 404 status: User with this refresh_token not found.<br>
@@ -129,7 +129,7 @@ GET
 {
 }
 ```
-> 200 status: Returns username, about, avatar_url, last_login_utc and register_time_utc.<br>
+> 200 status: Returns username, about, avatar_url, last_login and register_time.<br>
 
 > 401 status: This access_token has expired or bad access_token.<br>
 > 404 status: No one user with this token not found.<br>
