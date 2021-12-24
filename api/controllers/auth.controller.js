@@ -592,7 +592,6 @@ export class UserController {
 
                 //отправляем запрос в БД
                 try {
-                    console.log(`UPDATE Auth SET ${request} WHERE login = '${userDecoded.login}';`);
                     await db.query(
                         `UPDATE Auth SET ${request} WHERE login = '${userDecoded.login}';`
                     );
