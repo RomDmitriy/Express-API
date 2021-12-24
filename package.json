@@ -1,6 +1,6 @@
 {
   "name": "grand_carnival",
-  "version": "5.*",
+  "version": "6.0.0",
   "description": "API for Alexey Ivashkin and Ivan Kubyshev",
   "main": "index.js",
   "scripts": {
