@@ -2,7 +2,7 @@ import db from "../../shared/database.js";
 import jwt from "jsonwebtoken";
 import { base_avatar, jwt_key } from "../../security_config.js";
 import faker from "faker";
-import { getCurrTime, getCurrDateTime } from "../../shared/times.js";
+import { getCurrTime, getCurrDateTimeInSeconds } from "../../shared/times.js";
 import "colors";
 
 export class UserController {
@@ -41,13 +41,13 @@ export class UserController {
             while (true) {
                 try {
                     await db.query(
-                        `INSERT INTO Auth (login, nickname, password, last_login_, refresh_token, register_time_, avatar_url) VALUES (
+                        `INSERT INTO Auth (login, nickname, password, last_login, refresh_token, register_time, avatar_url) VALUES (
                             '${req.body.login}', 
                             '${req.body.login}', 
                             '${req.body.password}', 
-                            '${getCurrDateTime()}',
+                            ${getCurrDateTimeInSeconds()},
                             '${tokens.refresh_token}', 
-                            '${getCurrDateTime()}',
+                            ${getCurrDateTimeInSeconds()},
                             '${base_avatar}'
                         );`
                     );
@@ -143,12 +143,12 @@ export class UserController {
                     refresh_token: faker.finance.bitcoinAddress(),
                 };
 
-                //отправляем новый refresh_token и last_login_ в БД
+                //отправляем новый refresh_token и last_login в БД
                 while (true) {
                     try {
                         await db.query(
                             `UPDATE Auth SET refresh_token = '${newTokens.refresh_token}', 
-                            last_login_ = '${getCurrDateTime()}' WHERE login = '${req.body.login}';`
+                            last_login = '${getCurrDateTimeInSeconds()}' WHERE login = '${req.body.login}';`
                         );
                     } catch (err) {
                         //обработка когда refresh_token уже занят
@@ -243,11 +243,11 @@ export class UserController {
 
             //если пользователь найден, то сравниваем пароли
             if (userDecoded.password === userPassword.rows[0].password) {
-                //отправляем новый last_login_ в БД
+                //отправляем новый last_login в БД
                 while (true) {
                     try {
                         await db.query(
-                            `UPDATE Auth SET last_login_ = '${getCurrDateTime()}' 
+                            `UPDATE Auth SET last_login = '${getCurrDateTimeInSeconds()}' 
                             WHERE login = '${req.body.login}'`
                         );
                     } catch (err) {
@@ -291,7 +291,7 @@ export class UserController {
         console.log();
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
-                "Update token for user with refresh token = " +
+                " Update token for user with refresh token = " +
                 access_token
         );
 
@@ -320,7 +320,7 @@ export class UserController {
 
         //если пользователя с таким токеном нет
         if (!user.rowCount) {
-            console.log("Failure! Status code: 500 (User not found)".red);
+            console.log("Failure! Status code: 404 (User not found)".red);
             res.status(404).json(); //пользователь не найден
             return;
         }
@@ -343,7 +343,7 @@ export class UserController {
             try {
                 await db.query(
                     `UPDATE Auth SET refresh_token = '${newTokens.refresh_token}', 
-                    last_login_ = '${getCurrDateTime()}' 
+                    last_login = '${getCurrDateTimeInSeconds()}' 
                     WHERE refresh_token = '${access_token}'`
                 );
             } catch (err) {
@@ -396,7 +396,7 @@ export class UserController {
             //получаем публичные данные
             try {
                 user = await db.query(
-                    `SELECT nickname, about, avatar_url, to_char(last_login_, 'DD.MM.YYYY HH24:MI:SS') as last_login_, to_char(register_time_, 'DD.MM.YYYY HH24:MI:SS') as register_time_ FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
+                    `SELECT nickname, about, avatar_url, last_login, register_time FROM Auth WHERE login = '${userDecoded.login}' and password = '${userDecoded.password}';`
                 );
             } catch (err) {
                 console.log("Failure! Status code: 500".red);
@@ -628,7 +628,7 @@ export class UserController {
         console.log();
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
-                " Get user with access token = " +
+                " Delete user with access token = " +
                 access_token
         );
 

@@ -71,3 +71,7 @@ export function getCurrDateTimeUTC() {
         getUTCCurrTime()
     );
 }
+
+export function getCurrDateTimeInSeconds() {
+    return Date.now();
+}

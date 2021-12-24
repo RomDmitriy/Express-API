@@ -24,7 +24,7 @@ authRouter.get("/get_info", userController.getUserPublicInformation);
 authRouter.put("/change_data", limiterChangeData, userController.changeUserInformation);
 
 //сбросить пароль
-authRouter.put("/reset_password", userController.resetPassword);
+//authRouter.put("/reset_password", userController.resetPassword);
 
 //удалить пользователя
 authRouter.delete("/delete_user", userController.deleteUser);
