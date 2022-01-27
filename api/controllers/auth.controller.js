@@ -501,7 +501,7 @@ export class UserController {
         console.log();
         console.log(
             (" " + getCurrTime() + " ").bgWhite.black +
-                " Get user with access token = " +
+                " Update user information with access token = " +
                 access_token
         );
 
