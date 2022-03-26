@@ -7,6 +7,8 @@ fs.open('security_config.js', 'w', (err) => {
 
 fs.appendFile('security_config.js', `export const jwt_key = "your_jwt_key";
 
+export const base_avatar = "your_avatar_url";
+
 export const db_ip = "database_ip";
 export const db_user = "database_username";
 export const db_pass = "database_password";
