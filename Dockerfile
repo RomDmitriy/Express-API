@@ -6,8 +6,6 @@ COPY package.json .
 
 RUN npm i
 
-ENV PORT 5000
-
 EXPOSE $PORT
 
 COPY . .
